@@ -8,7 +8,7 @@ var $vm = window.$vm = new Vue({
     data:{
        page:'',
        contacts:[],
-       group:[],
+       groups:[],
        filterName:'' 
     },
     methods:{
@@ -23,7 +23,7 @@ var $vm = window.$vm = new Vue({
                 contacts.push(bot.contacts[key]);
             }
             this.contacts = contacts.filter(contact=>contact.NickName);
-            this.group = contacts.filter(contact=>contact.UserName.indexOf('@@')!=-1)
+            this.groups = contacts.filter(contact=>contact.UserName.indexOf('@@')!=-1)
         },
         login(){
             let bot = bg_window.newBot();

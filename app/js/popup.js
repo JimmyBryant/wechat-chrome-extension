@@ -9691,7 +9691,7 @@ var $vm = window.$vm = new __WEBPACK_IMPORTED_MODULE_1_vue___default.a({
     data: {
         page: '',
         contacts: [],
-        group: [],
+        groups: [],
         filterName: ''
     },
     methods: {
@@ -9706,7 +9706,7 @@ var $vm = window.$vm = new __WEBPACK_IMPORTED_MODULE_1_vue___default.a({
                 contacts.push(bot.contacts[key]);
             }
             this.contacts = contacts.filter(contact => contact.NickName);
-            this.group = contacts.filter(contact => contact.UserName.indexOf('@@') != -1);
+            this.groups = contacts.filter(contact => contact.UserName.indexOf('@@') != -1);
         },
         login() {
             let bot = bg_window.newBot();

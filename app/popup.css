@@ -96,3 +96,10 @@ html,body,p,h4{
     white-space: nowrap;
     width: 100%;
 }
+.contact_list .contact_title {
+    background: #2ba245 none repeat scroll 0 0;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 400;
+    padding: 5px 18px;
+}
