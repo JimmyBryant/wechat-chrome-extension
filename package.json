@@ -1,0 +1,23 @@
+{
+  "name": "wechat-chrome-extension",
+  "version": "1.0.0",
+  "description": "浏览器扩展，扩展微信网页端",
+  "main": "index.js",
+  "scripts": {
+    "watch":"webpack",
+    "build": "cross-env NODE_ENV=production webpack",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "bitterg",
+  "license": "ISC",
+  "dependencies": {
+    "babel-core": "^6.25.0",
+    "babel-loader": "^7.1.1",
+    "babel-polyfill": "^6.23.0",
+    "babel-preset-env": "^1.6.0",
+    "vue": "^2.3.4",
+    "webpack": "^3.1.0",
+    "wechat4u": "^0.7.5",
+    "vue-loader": "^13.0.1"
+  }
+}

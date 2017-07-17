@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>微信机器人</title>
+    <link rel="stylesheet" type="text/css" href="popup.css">
+</head>
+<body>
+
+<div id="app">
+    <div class="login_box">
+
+        <div class="qrcode" v-show="page == 'scan' ">
+            <div class="qrcode-img">
+                <img class="img"  class="img">
+            </div>
+            
+            <div class="">
+                <p class="sub_title">使用手机微信扫码登录</p>
+            </div>
+        </div>
+
+        <div class="avatar" v-show="page == 'confirm'">
+            <img class="img" mm-src="" alt="" src="https://res.wx.qq.com/a/wx_fed/webwx/res/static/img/2KriyDK.png">
+            <h4 class="sub_title">扫描成功</h4>
+            <p class="tips">请在手机上点击确认以登录</p>
+            <a href="javascript:;" ng-click="isScan = false;" class="action">切换帐号</a>
+        </div>
+    </div>
+
+    <div class="contact_list" v-show="page == 'contacts'">
+
+        <div v-for="contact in contacts" class="ng-scope">
+            <div class="chat_item slide-left ng-scope">
+
+                <div class="avatar">
+                    <img class="img lazy" v-bind:src="'https://wx.qq.com'+contact.HeadImgUrl" alt="">
+                </div>
+                <div class="info">
+                    <h3 class="nickname" ><span class="nickname_text">{{contact.NickName}}</span></h3>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="js/jquery.min.js"></script>
+<script src="js/popup.js"></script>
+</body>
+</html>

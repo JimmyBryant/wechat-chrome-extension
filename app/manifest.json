@@ -1,0 +1,30 @@
+{
+    "name":"wxbot",
+    "version":"0.01",
+    "manifest_version":2,
+    "description":"微信机器人",
+    "icons":{
+        "16":"icon16.png",
+        "32":"icon32.png",
+        "48":"icon48.png",
+        "64":"icon64.png",
+        "128":"icon128.png"
+    },
+    "background": {
+        "scripts": [
+        "js/background.js"
+        ]
+    },
+    "permissions": [
+        "http://*/*",
+        "https://*/*",
+        "background",
+        "notifications"
+    ],
+    "browser_action": {
+    "default_icon": "icon16.png",
+    "default_title": "wxbot",
+    "default_popup": "popup.html"
+    },
+    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+}
