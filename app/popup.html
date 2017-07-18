@@ -37,19 +37,20 @@
         </div>
         <div v-for="contact in groups" class="ng-scope">
             <div class="chat_item slide-left ng-scope">
-
                 <div class="avatar">
                     <img class="img lazy" v-bind:src="'https://wx.qq.com'+contact.HeadImgUrl" alt="">
                 </div>
                 <div class="info">
-                    <h3 class="nickname" ><span class="nickname_text">{{contact.NickName}}</span></h3>
+                    <h3 class="nickname" >
+                        <label><span class="nickname_text">{{contact.NickName}}<input v-on:click="clickHandler" class="checkbox" v-bind:value="contact.NickName"  type="checkbox" v-bind:checked="contact.Checked"/></span></label>
+                    </h3>
                 </div>
 
             </div>
         </div>
         </div>
 
-        <div v-if="contacts.length">
+<!--         <div v-if="contacts.length">
         <div class="ng-scope">
             <h4 class="contact_title ng-scope">联系人</h4>
         </div>
@@ -65,7 +66,7 @@
 
             </div>
         </div>
-        </div>
+        </div> -->
 
     </div>
 </div>

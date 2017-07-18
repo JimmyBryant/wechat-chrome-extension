@@ -4,13 +4,12 @@ import Wechat from 'wechat4u';
 
 class WxBot extends Wechat {
 
-  constructor() {
-    super();
+  constructor(data) {
+    super(data);
     this.groups = [];
     this.ava_contacts = [];
     // 
     var auto_msg_timer = null;
-    // 本地存储优惠券列表
     var localStorage = window.localStorage;
 
     this.on('login',()=>{
@@ -32,13 +31,13 @@ class WxBot extends Wechat {
              * 文本消息
              */
             console.log(msg.Content)
-            this._botReply(msg)
+            // this._botReply(msg)
 
         }});
         this.on('contacts-updated',contacts=>{
           this._updateContact()
-          clearTimeout(auto_msg_timer);
-          auto_msg_timer = setTimeout(()=>{this._autoSendMsg()},5000)
+/*           clearTimeout(auto_msg_timer);
+          auto_msg_timer = setTimeout(()=>{this._autoSendMsg()},5000) */
         });
         this.on('user-avatar', avatar => {
             console.log('登录用户头像Data URL：', avatar)
@@ -55,7 +54,8 @@ class WxBot extends Wechat {
       contacts_list.push(this.contacts[key]);
     }
     this.ava_contacts = contacts_list.filter(contact=>contact.NickName&&contact.UserName.indexOf('@@')===-1);
-    this.groups = contacts_list.filter(contact=>contact.UserName.indexOf('@@')!=-1);
+    this.groups = contacts_list.filter(contact=>contact.NickName&&contact.UserName.indexOf('@@')!=-1);
+    this.updateGroups();
   }
 
   _tuning(word) {
@@ -156,12 +156,32 @@ class WxBot extends Wechat {
 
     
   }
+  /* 
+  * 更新微信群属性：是否选择群发
+  */
+  updateGroups(){
+    if(localStorage.checkedGroup){
+      let checkedGroup = JSON.parse(localStorage.checkedGroup);
+      let arr = Object.keys(checkedGroup);
+      this.groups.forEach(group=>{
+        let key = encodeURI(group.NickName);
+        if(arr.includes(key)){
+          group.Checked = true;
+        }
+      })
+    }
+  }
 }
 
 let bot = null;
 window.getBot = () => {
-  if (!bot)
-    bot = new WxBot();  
+  let prop = null;
+  if (!bot){
+    if(localStorage.reloginProp){
+      prop = JSON.parse(localStorage.reloginProp) 
+    }
+    bot = new WxBot(prop);    
+  }   
   return bot;
 };
 window.newBot = () => {

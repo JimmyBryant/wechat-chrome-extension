@@ -89,12 +89,18 @@ html,body,p,h4{
     display: inline-block;
     vertical-align: top;
 }
+.chat_item .info .nickname label{
+    cursor: pointer;
+}
 .chat_item .info .nickname_text {
     overflow: hidden;
     overflow-wrap: normal;
     text-overflow: ellipsis;
     white-space: nowrap;
     width: 100%;
+}
+.chat_item .info .nickname_text .checkbox{
+    float: right;
 }
 .contact_list .contact_title {
     background: #2ba245 none repeat scroll 0 0;

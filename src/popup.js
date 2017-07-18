@@ -12,10 +12,14 @@ var $vm = window.$vm = new Vue({
        filterName:'' 
     },
     methods:{
+        clickHandler(e){
+            let elem = e.target;
+            
+            updateCheckedGroup($(elem));          
+        },
         showContacts(){
             this.page = 'contacts';
             let bot = bg_window.getBot();
-            this.contacts = bot.ava_contacts;
             this.groups = bot.groups;
         },
         login(){
@@ -26,6 +30,8 @@ var $vm = window.$vm = new Vue({
             });
             bot.on('login', () => {
                 console.log('登录成功')
+                // 保存数据，方便快速登录
+                localStorage.reloginProp = JSON.stringify(bot.botData)
                 this.showContacts();
             });
             bot.on('logout', () => {
@@ -35,15 +41,17 @@ var $vm = window.$vm = new Vue({
                 console.log(err);
             });
             bot.on('contacts-updated',contacts=>{
-                this.contacts = bot.ava_contacts;
+                // this.contacts = bot.ava_contacts;
                 this.groups = bot.groups;
             });
             bot.on('uuid',uuid=>{
                 console.log('拿到uuid')
                 $('.qrcode-img .img')
                 .attr({'src':`https://login.weixin.qq.com/qrcode/${uuid}`})
-            })
+            });
+
             bot.start();  
+            
         },
         initList() {
 
@@ -77,8 +85,35 @@ var $vm = window.$vm = new Vue({
 
 
 
-
-
+/* 
+@elem {Object} Dom element
+*/
+function updateCheckedGroup(elem){
+    let name = encodeURI(elem.value)
+        ,checked = elem.checked
+        ,groups = {}
+        ,bot = bg_window.getBot()
+        ;
+    if(localStorage.checkedGroup){
+        groups = JSON.parse(localStorage.checkedGroup);
+    }
+    if(checked){
+        groups[name] = true;
+    }else{
+        delete groups[name];
+    }
+    bot.groups.forEach(contact=>{
+        if(contact.NickName==elem.value){
+            if(checked){
+                contact.Checked = true;
+            }else{
+                delete contact.Checked;
+            }
+            
+        }
+    });
+    localStorage.checkedGroup = JSON.stringify(groups);
+}
 
 function logout() {
     let bot = bg_window.getBot();
