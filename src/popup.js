@@ -14,16 +14,9 @@ var $vm = window.$vm = new Vue({
     methods:{
         showContacts(){
             this.page = 'contacts';
-            this.updateConcats()
-        },
-        updateConcats(){
             let bot = bg_window.getBot();
-            let contacts = [];
-            for(let key in bot.contacts){
-                contacts.push(bot.contacts[key]);
-            }
-            this.contacts = contacts.filter(contact=>contact.NickName);
-            this.groups = contacts.filter(contact=>contact.UserName.indexOf('@@')!=-1)
+            this.contacts = bot.ava_contacts;
+            this.groups = bot.groups;
         },
         login(){
             let bot = bg_window.newBot();
@@ -42,8 +35,8 @@ var $vm = window.$vm = new Vue({
                 console.log(err);
             });
             bot.on('contacts-updated',contacts=>{
-                console.log('更新用户列表：',contacts)
-                this.updateConcats()
+                this.contacts = bot.ava_contacts;
+                this.groups = bot.groups;
             });
             bot.on('uuid',uuid=>{
                 console.log('拿到uuid')
