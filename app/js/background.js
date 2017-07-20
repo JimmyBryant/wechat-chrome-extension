@@ -13666,14 +13666,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
+let idb = __webpack_require__(371);
 
 class WxBot extends __WEBPACK_IMPORTED_MODULE_1_wechat4u___default.a {
 
   constructor(data) {
     super(data);
+    this.captrueQuan = false; // 是否开始采集优惠券
     this.groups = [];
     this.ava_contacts = [];
-    // 
+    // 初始化indexedDB
+    idb.initDb();
     var auto_msg_timer = null;
     var localStorage = window.localStorage;
 
@@ -13763,17 +13766,45 @@ class WxBot extends __WEBPACK_IMPORTED_MODULE_1_wechat4u___default.a {
       url: 'http://api.dataoke.com/index.php',
       params: params
     }).then(res => {
-      const data = res.data;
+      let data = res.data;
       let result = data.result;
-      localStorage.quan_total = localStorage.quan_total.slice(0, -1) + ',' + JSON.stringify(result).substring(1);
-      localStorage.page = +page + 1;
+      localStorage.page = page++;
       return result;
     }).catch(err => {
       console.log(err);
-      return '大淘客api请求出错';
+      throw '大淘客api请求出错';
     });
   }
 
+  /* 
+  * @method
+  * @param {Array<Objet>} data  优惠券信息，JSON数组
+  */
+  _storeQuan(data) {
+    return idb.addItems(idb.STORE_NAME.TOTAL, data);
+  }
+
+  /* 
+    开始采集优惠券
+  */
+  _startCaptureQuan() {
+    let _this = this;
+    this.captrueQuan = true;
+    function loop() {
+      _this._requestQuan().then(data => {
+        return _this._storeQuan(data);
+      }, reason => {
+        throw reason;
+      }).then(() => {
+        if (_this.captrueQuan) {
+          loop();
+        }
+      }, reason => {
+        throw reason;
+      });
+    }
+    loop();
+  }
   _sendQuanMsg(data) {
     let pic = data.Pic;
     let filename = pic.substring(pic.lastIndexOf('/') + 1);
@@ -13813,6 +13844,7 @@ class WxBot extends __WEBPACK_IMPORTED_MODULE_1_wechat4u___default.a {
 }
 
 let bot = null;
+
 window.getBot = () => {
   let prop = null;
   if (!bot) {
@@ -13939,6 +13971,7 @@ var Wechat = function (_WechatCore) {
       var _this3 = this;
 
       var id = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : ++this.syncPollingId;
+
       if (this.state !== this.CONF.STATE.login || this.syncPollingId !== id) {
         return;
       }
@@ -13949,8 +13982,6 @@ var Wechat = function (_WechatCore) {
             _this3.syncErrorCount = 0;
             _this3.handleSync(data);
           });
-        }else if(selector===undefined){
-          throw 'Sync Check发生错误'
         }
       }).then(function () {
         _this3.lastSyncTime = Date.now();
@@ -14001,8 +14032,6 @@ var Wechat = function (_WechatCore) {
             return _this4.batchGetContact(emptyGroup).then(function (_contacts) {
               return contacts = contacts.concat(_contacts || []);
             });
-          }else{
-            return emptyGroup;
           }
         } else {
           return contacts;
@@ -14307,7 +14336,7 @@ exports = module.exports = Wechat;
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(console, Buffer) {
+/* WEBPACK VAR INJECTION */(function(Buffer, console) {
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -14658,42 +14687,20 @@ var WechatCore = function () {
           'deviceid': (0, _util.getDeviceID)(),
           'synckey': _this9.PROP.formatedSyncKey
         };
-        let xhr = new XMLHttpRequest();
-        let arr = [],qstr='';
-        for(var key in params){
-          arr.push(key+'='+params[key]);
-        }
-        qstr = arr.join('&');
-        xhr.open('get',_this9.CONF.API_synccheck+'?'+qstr);
-        xhr.send();
-        return new Promise(function(resolve,reject){
-          xhr.addEventListener('load',function(){
-              var res = {
-                data:xhr.response
-              }
-              resolve(res);      
-          }
-        )})
-/*         return _this9.request({
+        return _this9.request({
           method: 'GET',
           url: _this9.CONF.API_synccheck,
           params: params
-        }) */
-        .then(function (res) {
+        }).then(function (res) {
           var window = {
             synccheck: {}
           };
+
           // eslint-disable-next-line
-          try{eval(res.data);}catch(err){
-            console.error('有错误：',res.data);
-            throw err
-          }
+          eval(res.data);
           _util.assert.equal(window.synccheck.retcode, _this9.CONF.SYNCCHECK_RET_SUCCESS, res);
+
           return window.synccheck.selector;
-        }).catch(function(err){
-          debug(err);
-          err.tips = '乱码了';
-          throw err;
         });
       }).catch(function (err) {
         debug(err);
@@ -15686,7 +15693,7 @@ var WechatCore = function () {
 
 exports.default = WechatCore;
 //# sourceMappingURL=core.js.map
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(41), __webpack_require__(119).Buffer))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(119).Buffer, __webpack_require__(41)))
 
 /***/ }),
 /* 328 */
@@ -39997,6 +40004,73 @@ function MessageFactory(instance) {
   };
 }
 //# sourceMappingURL=message.js.map
+
+/***/ }),
+/* 369 */,
+/* 370 */,
+/* 371 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(console) {
+
+var indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
+const DB_NAME = "wxbot-chrome-extension";
+// const DB_NAME = "fffff";
+const DB_VERSION = 1;
+const DB_STORE_NAME = {
+    TOTAL: 'quan_total'
+};
+let db = null;
+let idb = {
+    STORE_NAME: DB_STORE_NAME,
+    /* 
+    *   创建存储空间
+    */
+    initDb() {
+        console.debug("initDb ...");
+        var req = indexedDB.open(DB_NAME, DB_VERSION);
+        req.onsuccess = function (event) {
+            db = this.result;
+            console.debug("initDb DONE");
+        };
+        req.onerror = function (event) {
+            console.error("initDb:", event.target.errorCode);
+        };
+
+        req.onupgradeneeded = function (event) {
+            console.debug("initDb.onupgradeneeded");
+            var db = event.target.result;
+            var objectStore = db.createObjectStore(DB_STORE_NAME.TOTAL, { autoIncrement: true });
+        };
+    },
+    addItems(name, dataList) {
+        return Promise.resolve().then(() => {
+            let tx = db.transaction(name, 'readwrite');
+            let objectStore = tx.objectStore(name);
+            let promiseArr = [];
+            for (let i in dataList) {
+                let p = new Promise((resolve, reject) => {
+                    let data = dataList[i];
+                    let request = objectStore.add(data);
+                    request.onsuccess = function (event) {
+                        resolve(data);
+                    };
+                    request.onerror = function (event) {
+                        reject('添加数据失败');
+                    };
+                });
+                promiseArr.push(p);
+                return Promise.all(promiseArr);
+            }
+        }).catch(err => {
+            throw err;
+        });
+    }
+};
+
+exports = module.exports = idb;
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(41)))
 
 /***/ })
 /******/ ]);

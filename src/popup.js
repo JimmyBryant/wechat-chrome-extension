@@ -2,7 +2,8 @@
 import "babel-polyfill";
 import Vue from 'vue';
 window.Vue = Vue;
-var bg_window = null;
+let bg_window = null;
+let bot = null;
 var $vm = window.$vm = new Vue({
     el:'#app',
     data:{
@@ -14,16 +15,26 @@ var $vm = window.$vm = new Vue({
     methods:{
         clickHandler(e){
             let elem = e.target;
-            
-            updateCheckedGroup($(elem));          
+            if(elem.id){
+                switch(elem.id){
+                    case "start-capture":
+                        console.log('开始采集数据')
+                        bot._startCaptureQuan();
+                    break;
+                    case "stop-capture":
+                        bot.captrueQuan = false;
+                    break;
+                }
+            }else{
+                updateCheckedGroup($(elem));   
+            }    
         },
         showContacts(){
             this.page = 'contacts';
-            let bot = bg_window.getBot();
             this.groups = bot.groups;
         },
         login(){
-            let bot = bg_window.newBot();
+            bot = bg_window.newBot();
             bot.on('user-avatar', avatar => {
                 $('.login_box .avatar img').attr('src',avatar)
                 this.page = 'confirm';
@@ -41,7 +52,9 @@ var $vm = window.$vm = new Vue({
                 console.log(err);
             });
             bot.on('contacts-updated',contacts=>{
+                bot._updateContact();  
                 // this.contacts = bot.ava_contacts;
+                console.log(bot.groups)
                 this.groups = bot.groups;
             });
             bot.on('uuid',uuid=>{
@@ -59,7 +72,7 @@ var $vm = window.$vm = new Vue({
     },
     created(){
         bg_window = chrome.extension.getBackgroundPage();
-        let bot = bg_window.getBot();
+        bot = bg_window.getBot();
         
         if (bot.state == bg_window.getWxState().login) {
             this.showContacts();

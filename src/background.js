@@ -1,15 +1,17 @@
 'use strict';
 import "babel-polyfill";
 import Wechat from 'wechat4u';
-import idb from 'idb';
+let idb = require('./idb');
 
 class WxBot extends Wechat {
-
+ 
   constructor(data) {
     super(data);
+    this.captrueQuan = false; // 是否开始采集优惠券
     this.groups = [];
     this.ava_contacts = [];
-    // 
+    // 初始化indexedDB
+    idb.initDb();
     var auto_msg_timer = null;
     var localStorage = window.localStorage;
 
@@ -99,17 +101,45 @@ class WxBot extends Wechat {
       url: 'http://api.dataoke.com/index.php',
       params: params      
     }).then(res=>{
-      const data = res.data;
+      let data = res.data;
       let result = data.result;
-      
+      localStorage.page = page++;
       return  result;
     }).catch(err=>{
       console.log(err);
-      return '大淘客api请求出错';
+      throw '大淘客api请求出错';
     });
   }
 
+  /* 
+  * @method
+  * @param {Array<Objet>} data  优惠券信息，JSON数组
+  */
+  _storeQuan(data){
+    return idb.addItems(idb.STORE_NAME.TOTAL,data);
+  }
 
+  /* 
+    开始采集优惠券
+  */
+  _startCaptureQuan(){
+    let _this = this;
+    this.captrueQuan = true;
+    function loop(){
+      _this._requestQuan().then(data=>{
+          return _this._storeQuan(data)
+        },reason=>{
+          throw reason;
+        }).then(()=>{
+        if(_this.captrueQuan){
+          loop();
+        }
+      },reason=>{
+        throw reason;
+      })
+    }
+    loop();
+  }
   _sendQuanMsg(data){
     let pic = data.Pic;
     let filename = pic.substring(pic.lastIndexOf('/')+1);
@@ -150,6 +180,7 @@ class WxBot extends Wechat {
 }
 
 let bot = null;
+
 window.getBot = () => {
   let prop = null;
   if (!bot){

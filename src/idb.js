@@ -1,53 +1,40 @@
 'use strict';
 var indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
-const dbname = "wxbot-chrome-extension";
-const version = 1;
-export const idb = {
-    open(){
-        return new Promise((resolve,reject)=>{
-            let request = indexedDB.open(dbname,version);
-            request.onerror = function(){
-                reject('打开indexedDB出错');
-            }
-            request.onsuccess = function(event) {
-               resolve(event.target.result);
-            }
-        });
-    },
-    createObjectStore(){
-        return Promise.resolve().then(idb.open().then(db=>{
-            let store1 = 'quan_total';
-            if (!db.objectStoreNames.contains(store1)) {
-               return db.createObjectStore(store1,{autoIncrement : true});
-            }else{
-                throw 'objectStore已存在';
-            }
-        })).catch(err=>{
-            throw err;
-        });
-    },
-    addItem(name,data){
-        return  Promise.resolve().then(idb.open().then(db=>{
-            var tx = db.transaction(name, 'readwrite');
-            var store = tx.objectStore(name);
-            store.add(data);
-            new Promise((resolve,reject)=>{
-                tx.oncomplete = function(event) {
-                    resolve(data)
-                };
-                tx.onerror = function(event) {
-                    reject('添加数据失败')
-                };
-            })
+const DB_NAME = "wxbot-chrome-extension";
+// const DB_NAME = "fffff";
+const DB_VERSION = 1;
+const DB_STORE_NAME = {
+    TOTAL:'quan_total'
+};
+let db = null;
+let idb = {
+    STORE_NAME:DB_STORE_NAME,
+    /* 
+    *   创建存储空间
+    */
+    initDb() {
+        console.debug("initDb ...");
+        var req = indexedDB.open(DB_NAME, DB_VERSION);
+        req.onsuccess = function (event) {
+            db = this.result;
+            console.debug("initDb DONE");
+        };
+        req.onerror = function (event) {
+            console.error("initDb:", event.target.errorCode);
+        };
 
-        })).catch(err=>{
-            throw err;
-        })
+        req.onupgradeneeded = function (event) {
+            console.debug("initDb.onupgradeneeded");
+            var db = event.target.result;
+            var objectStore = db.createObjectStore(DB_STORE_NAME.TOTAL, {autoIncrement: true });
+        };
+
+        
     },
     addItems(name,dataList){
-        return  Promise.resolve().then(idb.open().then(db=>{
+        return  Promise.resolve().then(()=>{
             let tx = db.transaction(name, 'readwrite');
-            let store = tx.objectStore(name);
+            let objectStore = tx.objectStore(name);
             let promiseArr = [];
             for (let i in dataList) {
                 let p = new Promise((resolve,reject)=>{
@@ -63,8 +50,10 @@ export const idb = {
                 promiseArr.push(p);
                 return Promise.all(promiseArr);
             }
-        })).catch(err=>{
+        }).catch(err=>{
             throw err;
         })
     }
 }
+
+exports = module.exports = idb;
