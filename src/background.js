@@ -1,6 +1,7 @@
 'use strict';
 import "babel-polyfill";
 import Wechat from 'wechat4u';
+import idb from 'idb';
 
 class WxBot extends Wechat {
 
@@ -35,13 +36,9 @@ class WxBot extends Wechat {
 
         }});
         this.on('contacts-updated',contacts=>{
-          this._updateContact()
-           clearTimeout(auto_msg_timer);
-          auto_msg_timer = setTimeout(()=>{this._sendQuanMsg()},5000) 
+          this._updateContact()  
         });
-        this.on('user-avatar', avatar => {
-            console.log('登录用户头像Data URL：', avatar)
-        })
+
     });
   }
 
@@ -104,8 +101,7 @@ class WxBot extends Wechat {
     }).then(res=>{
       const data = res.data;
       let result = data.result;
-      localStorage.quan_total = localStorage.quan_total.slice(0,-1)+','+JSON.stringify(result).substring(1);
-      localStorage.page = +page+1;
+      
       return  result;
     }).catch(err=>{
       console.log(err);
@@ -115,15 +111,12 @@ class WxBot extends Wechat {
 
 
   _sendQuanMsg(data){
-    data = {"D_title": "\u5de7\u7684\u6728\u9676\u74f7\u6c34\u676f\u6709\u76d6\u9a6c\u514b\u676f", "Title": "\u5de7\u7684\u6728\u9676\u74f7\u6c34\u676f\u6709\u76d6\u9a6c\u514b\u676f\u725b\u5976\u65e9\u9910\u676f\u9676\u74f7\u676f\u521b\u610f\u6d6e\u96d5\u5496\u5561\u676f\u5e26\u76d6\u676f", "Dsr": 4.8, "Commission_queqiao": 0.00, "Quan_receive": 0, "Quan_price": 20.00, "Quan_time": "2017-07-24 23:59:59", "Jihua_link": "http://pub.alimama.com/myunion.htm?spm=2013.1.0.0.45Gd0g#!/promo/self/campaign?campaignId=24243670&shopkeeperId=56977931&userNumberId=2056390438", "Price": 19.90, "Jihua_shenhe": 0, "Introduce": "\u5de7\u7684\u6728\u9676\u74f7\u6c34\u676f\uff0c\u6709\u76d6\u9a6c\u514b\u676f\uff0c\u725b\u5976\u65e9\u9910\u676f\uff0c\u521b\u610f\u6d6e\u96d5\u5496\u5561\u676f\uff0c\u8d85\u503c\u62a2\u8d2d\u3002", "Cid": 4, "Sales_num": 152, "Quan_link": "http://shop.m.taobao.com/shop/coupon.htm?seller_id=2056390438&activity_id=19d8f71a1a574f8891def8e2a1618f5d", "IsTmall": 1, "GoodsID": "539953819470", "Commission_jihua": 30.50, "ID": 3032209, "Que_siteid": "0", "Commission": 30.50, "Pic": "https://img.alicdn.com/imgextra/i4/2842220742/TB29E.0XQ7myKJjSZFIXXc0OVXa_!!2842220742.jpg", "Org_Price": 39.90, "Quan_m_link": "", "Quan_id": "19d8f71a1a574f8891def8e2a1618f5d", "Quan_condition": "39", "Quan_surplus": 1000, "SellerID": "2056390438"};
     let pic = data.Pic;
     let filename = pic.substring(pic.lastIndexOf('/')+1);
     let _ = this;
     
     this.request({method:'get',url:pic,responseType:'blob'}).then(res=>{
       let blob = res.data;
-      console.log(typeof res.data,res.data instanceof File,res.data instanceof Blob)
-
       let obj = {
         file: new File([blob], filename, {type: blob.type, lastModified: new Date().valueOf()}),
         filename:filename

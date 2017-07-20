@@ -11,15 +11,14 @@
         "128":"icon128.png"
     },
     "background": {
-        "scripts": [
-        "js/background.js"
-        ]
+        "scripts": [ "js/jquery.min.js", "js/background.js"]
     },
     "permissions": [
         "http://*/*",
         "https://*/*",
         "background",
-        "notifications"
+        "notifications",
+        "cookies"
     ],
     "browser_action": {
     "default_icon": "icon16.png",
