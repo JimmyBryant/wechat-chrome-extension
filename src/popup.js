@@ -10,22 +10,38 @@ var $vm = window.$vm = new Vue({
        page:'',
        contacts:[],
        groups:[],
+       quanCount:0,
        filterName:'' 
     },
     methods:{
         clickHandler(e){
             let elem = e.target;
+            alert('点我了')
             if(elem.id){
                 switch(elem.id){
-                    case "start-capture":
-                        console.log('开始采集数据')
-                        bot._startCaptureQuan();
+                    case "capture-quan":
+                        if(!bot.captrueQuan){
+                            console.log('开始采集优惠券')
+                            bot._startCaptureQuan();
+                            elem.innerText = '停止采集优惠券'; 
+                        }else{
+                            bot.captrueQuan = false;
+                            elem.innerText = '开始采集优惠券';                             
+                        }
                     break;
-                    case "stop-capture":
-                        bot.captrueQuan = false;
+                    case "auto-send":
+                        if(!bot.autoSend){
+                            console.log('开始群发优惠券')
+                            bot._startAutoSend();
+                            elem.innerText = '停止群发优惠券'; 
+                        }else{
+                            bot.captrueQuan = false;
+                            elem.innerText = '开始群发优惠券';                             
+                        } 
                     break;
                 }
             }else{
+                console.log('点击事件',elem)
                 updateCheckedGroup($(elem));   
             }    
         },
@@ -44,8 +60,11 @@ var $vm = window.$vm = new Vue({
                 // 保存数据，方便快速登录
                 localStorage.reloginProp = JSON.stringify(bot.botData)
                 this.showContacts();
+                this.quanCount = bot.quanCount;
             });
             bot.on('logout', () => {
+                // 清楚登录信息
+                delete localStorage.reloginProp;
                 console.log('注销成功')
             });
             bot.on('error', err => {
@@ -54,7 +73,6 @@ var $vm = window.$vm = new Vue({
             bot.on('contacts-updated',contacts=>{
                 bot._updateContact();  
                 // this.contacts = bot.ava_contacts;
-                console.log(bot.groups)
                 this.groups = bot.groups;
             });
             bot.on('uuid',uuid=>{
@@ -63,7 +81,14 @@ var $vm = window.$vm = new Vue({
                 .attr({'src':`https://login.weixin.qq.com/qrcode/${uuid}`})
             });
 
-            bot.start();  
+            // bot.start();  
+
+            if (bot.PROP.uin) {
+              // 存在登录数据时，可以随时调用restart进行重启
+              bot.restart()
+            } else {
+              bot.start()
+            }
             
         },
         initList() {

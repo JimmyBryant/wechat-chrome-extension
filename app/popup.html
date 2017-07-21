@@ -33,8 +33,9 @@
     <div class="contact_list" v-show="page == 'contacts'">
         <div v-if="groups.length">
         <div>
-            <button class="btn" id="start-capture"  v-on:click="clickHandler">开始采集优惠券</button>
-            <button class="btn" id="stop-capture" v-on:click="clickHandler">停止采集优惠券</button>
+            <h4>已采集优惠券数量:{{quanCount}}</h4>
+            <button class="btn" id="capture-quan"  v-on:click="clickHandler">开始采集优惠券</button>
+            <button class="btn" id="auto-send"  v-on:click="clickHandler">开始群发优惠券</button>
         </div>
         <div class="ng-scope">
             <h4 class="contact_title ng-scope">微信群</h4>

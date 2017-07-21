@@ -8,10 +8,22 @@ class WxBot extends Wechat {
   constructor(data) {
     super(data);
     this.captrueQuan = false; // 是否开始采集优惠券
+    this.autoSend = false;  //是否开始自动群发
     this.groups = [];
     this.ava_contacts = [];
+    this.quanCount = 0; //采集优惠券的数量
+    this.sendedIndex = 1; // 发送优惠券起始index
     // 初始化indexedDB
-    idb.initDb();
+    idb.initDb()
+    .then(db=>{
+      // 获取优惠券数量
+      idb.getCount(idb.STORE_NAME.TOTAL).then(count=>{
+        return this.quanCount = count;
+      })
+    }).catch(er=>{
+      throw err;
+    });
+
     var auto_msg_timer = null;
     var localStorage = window.localStorage;
 
@@ -102,9 +114,8 @@ class WxBot extends Wechat {
       params: params      
     }).then(res=>{
       let data = res.data;
-      let result = data.result;
-      localStorage.page = page++;
-      return  result;
+      localStorage.page = ++page;
+      return  data.result;
     }).catch(err=>{
       console.log(err);
       throw '大淘客api请求出错';
@@ -114,9 +125,14 @@ class WxBot extends Wechat {
   /* 
   * @method
   * @param {Array<Objet>} data  优惠券信息，JSON数组
+  * @return Promise
   */
   _storeQuan(data){
-    return idb.addItems(idb.STORE_NAME.TOTAL,data);
+    return idb.addItems(idb.STORE_NAME.TOTAL,data).then(()=>{
+       return idb.getCount(idb.STORE_NAME.TOTAL).then(count=>{
+        return this.quanCount = count;
+       })
+    });
   }
 
   /* 
@@ -145,22 +161,48 @@ class WxBot extends Wechat {
     let filename = pic.substring(pic.lastIndexOf('/')+1);
     let _ = this;
     
-    this.request({method:'get',url:pic,responseType:'blob'}).then(res=>{
+    return this.request({method:'get',url:pic,responseType:'blob'}).then(res=>{
       let blob = res.data;
       let obj = {
         file: new File([blob], filename, {type: blob.type, lastModified: new Date().valueOf()}),
         filename:filename
       }
       this.groups.forEach(contact=>{
-        this.sendMsg(obj, contact.UserName)
-        .catch(err => {
-          this.emit('error', err)
-        })
-        this.sendMsg(data.D_title,contact.UserName)
+        // 判断是否勾选群发
+        if(contact.Checked){
+          this.sendMsg(obj, contact.UserName).then(()=>{
+            return this.sendMsg(data.D_title,contact.UserName);
+          }).catch(err => {
+            this.emit('error', err)
+          })
+          
+        }
       });
     }).catch(err=>{throw err});
 
     
+  }
+  /* 
+    @method 自动群发优惠券
+  */
+  _startAutoSend(){
+    var _this = this;
+    _this.autoSend = true; 
+    let t = setInterval(function(){
+      let l = _this.sendedIndex
+          ,count = 1
+          ,u = l+1
+          ;
+      idb.getRangeCursor(idb.STORE_NAME.TOTAL,l,u).then(cursor=>{
+        if(cursor){
+          let data = cursor.data;
+          _this._sendQuanMsg(data).then(()=>{
+            _this.sendedIndex = u;  // 重新设置sendIndex
+          });
+          cursor.contiue();
+        }
+      })
+    },1000*10)
   }
   /* 
   * 更新微信群属性：是否选择群发
