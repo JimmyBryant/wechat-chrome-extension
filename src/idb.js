@@ -19,7 +19,6 @@ let idb = {
             req.onsuccess = function (event) {
                 db = event.target.result;
                 resolve(db);
-                console.debug("initDb DONE");
             };
             req.onerror = function (event) {
                 console.error("initDb:", event.target.errorCode);

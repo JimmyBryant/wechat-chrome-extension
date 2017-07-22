@@ -13666,7 +13666,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
-let idb = __webpack_require__(369);
+let idb = __webpack_require__(371);
 
 class WxBot extends __WEBPACK_IMPORTED_MODULE_1_wechat4u___default.a {
 
@@ -13680,9 +13680,13 @@ class WxBot extends __WEBPACK_IMPORTED_MODULE_1_wechat4u___default.a {
     this.sendedIndex = 1; // 发送优惠券起始index
     // 初始化indexedDB
     idb.initDb().then(db => {
+      console.debug("initDb DONE,start to get quan count");
       // 获取优惠券数量
       idb.getCount(idb.STORE_NAME.TOTAL).then(count => {
+        console.log('获取到优惠券数量');
         return this.quanCount = count;
+      }, reason => {
+        throw reason;
       });
     }).catch(er => {
       throw err;
@@ -13857,11 +13861,11 @@ class WxBot extends __WEBPACK_IMPORTED_MODULE_1_wechat4u___default.a {
           u = l + 1;
       idb.getRangeCursor(idb.STORE_NAME.TOTAL, l, u).then(cursor => {
         if (cursor) {
-          let data = cursor.data;
+          let data = cursor.value;
           _this._sendQuanMsg(data).then(() => {
             _this.sendedIndex = u; // 重新设置sendIndex
           });
-          cursor.contiue();
+          cursor.continue();
         }
       });
     }, 1000 * 10);
@@ -14011,6 +14015,7 @@ var Wechat = function (_WechatCore) {
       var _this3 = this;
 
       var id = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : ++this.syncPollingId;
+
       if (this.state !== this.CONF.STATE.login || this.syncPollingId !== id) {
         return;
       }
@@ -14021,8 +14026,6 @@ var Wechat = function (_WechatCore) {
             _this3.syncErrorCount = 0;
             _this3.handleSync(data);
           });
-        }else if(selector===undefined){
-          throw 'Sync Check发生错误'
         }
       }).then(function () {
         _this3.lastSyncTime = Date.now();
@@ -14073,8 +14076,6 @@ var Wechat = function (_WechatCore) {
             return _this4.batchGetContact(emptyGroup).then(function (_contacts) {
               return contacts = contacts.concat(_contacts || []);
             });
-          }else{
-            return emptyGroup;
           }
         } else {
           return contacts;
@@ -14379,7 +14380,7 @@ exports = module.exports = Wechat;
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(console, Buffer) {
+/* WEBPACK VAR INJECTION */(function(Buffer, console) {
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -14730,42 +14731,20 @@ var WechatCore = function () {
           'deviceid': (0, _util.getDeviceID)(),
           'synckey': _this9.PROP.formatedSyncKey
         };
-        let xhr = new XMLHttpRequest();
-        let arr = [],qstr='';
-        for(var key in params){
-          arr.push(key+'='+params[key]);
-        }
-        qstr = arr.join('&');
-        xhr.open('get',_this9.CONF.API_synccheck+'?'+qstr);
-        xhr.send();
-        return new Promise(function(resolve,reject){
-          xhr.addEventListener('load',function(){
-              var res = {
-                data:xhr.response
-              }
-              resolve(res);      
-          }
-        )})
-/*         return _this9.request({
+        return _this9.request({
           method: 'GET',
           url: _this9.CONF.API_synccheck,
           params: params
-        }) */
-        .then(function (res) {
+        }).then(function (res) {
           var window = {
             synccheck: {}
           };
+
           // eslint-disable-next-line
-          try{eval(res.data);}catch(err){
-            console.error('有错误：',res.data);
-            throw err
-          }
+          eval(res.data);
           _util.assert.equal(window.synccheck.retcode, _this9.CONF.SYNCCHECK_RET_SUCCESS, res);
+
           return window.synccheck.selector;
-        }).catch(function(err){
-          debug(err);
-          err.tips = '乱码了';
-          throw err;
         });
       }).catch(function (err) {
         debug(err);
@@ -15758,7 +15737,7 @@ var WechatCore = function () {
 
 exports.default = WechatCore;
 //# sourceMappingURL=core.js.map
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(41), __webpack_require__(119).Buffer))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(119).Buffer, __webpack_require__(41)))
 
 /***/ }),
 /* 328 */
@@ -40071,7 +40050,9 @@ function MessageFactory(instance) {
 //# sourceMappingURL=message.js.map
 
 /***/ }),
-/* 369 */
+/* 369 */,
+/* 370 */,
+/* 371 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -40097,7 +40078,6 @@ let idb = {
             req.onsuccess = function (event) {
                 db = event.target.result;
                 resolve(db);
-                console.debug("initDb DONE");
             };
             req.onerror = function (event) {
                 console.error("initDb:", event.target.errorCode);

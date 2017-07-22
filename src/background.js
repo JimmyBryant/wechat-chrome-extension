@@ -16,9 +16,13 @@ class WxBot extends Wechat {
     // 初始化indexedDB
     idb.initDb()
     .then(db=>{
+      console.debug("initDb DONE,start to get quan count");
       // 获取优惠券数量
       idb.getCount(idb.STORE_NAME.TOTAL).then(count=>{
+        console.log('获取到优惠券数量')
         return this.quanCount = count;
+      },reason=>{
+        throw reason;
       })
     }).catch(er=>{
       throw err;
@@ -195,11 +199,11 @@ class WxBot extends Wechat {
           ;
       idb.getRangeCursor(idb.STORE_NAME.TOTAL,l,u).then(cursor=>{
         if(cursor){
-          let data = cursor.data;
+          let data = cursor.value;
           _this._sendQuanMsg(data).then(()=>{
             _this.sendedIndex = u;  // 重新设置sendIndex
           });
-          cursor.contiue();
+          cursor.continue();
         }
       })
     },1000*10)
