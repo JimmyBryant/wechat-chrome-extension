@@ -10,7 +10,8 @@ var $vm = window.$vm = new Vue({
         page: '',
         contacts: [],
         groups: [],
-        quanCount: 0,
+        quan_count: 0,
+        auto_send_state:false,
         filterName: ''
     },
     methods: {
@@ -19,23 +20,24 @@ var $vm = window.$vm = new Vue({
             if (elem.id) {
                 switch (elem.id) {
                     case "capture-quan":
-                        if (!bot.captrueQuan) {
+                        if (!bot.captrue_quan) {
                             console.log('开始采集优惠券')
                             bot._startCaptureQuan();
                             elem.innerText = '停止采集优惠券';
                         } else {
-                            bot.captrueQuan = false;
+                            bot.captrue_quan = false;
                             elem.innerText = '开始采集优惠券';
                         }
                         break;
                     case "auto-send":
-                        if (!bot.autoSend) {
+                        if (!bot.auto_send) {
                             console.log('开始群发优惠券')
-                            bot._startAutoSend();
+                            bot._startauto_send();
                             elem.innerText = '停止群发优惠券';
                         } else {
-                            bot.captrueQuan = false;
                             elem.innerText = '开始群发优惠券';
+                            bot._stopauto_send();
+                            
                         }
                         break;
                 }
@@ -59,7 +61,7 @@ var $vm = window.$vm = new Vue({
                     // 保存数据，方便快速登录
                 localStorage.reloginProp = JSON.stringify(bot.botData)
                 this.showContacts();
-                this.quanCount = bot.quanCount;
+                this.quan_count = bot.quan_count;
             });
             bot.on('logout', () => {
                 // 清楚登录信息
@@ -100,7 +102,8 @@ var $vm = window.$vm = new Vue({
 
         if (bot.state == bg_window.getWxState().login) {
             this.showContacts();
-            this.quanCount = bot.quanCount;
+            this.quan_count = bot.quan_count;
+            this.auto_send_state = bot.auto_send;
         } else {
             this.page = 'scan';
             this.login();

@@ -13672,19 +13672,19 @@ class WxBot extends __WEBPACK_IMPORTED_MODULE_1_wechat4u___default.a {
 
   constructor(data) {
     super(data);
-    this.captrueQuan = false; // 是否开始采集优惠券
-    this.autoSend = false; //是否开始自动群发
+    this.captrue_quan = false; // 是否开始采集优惠券
+    this.auto_send = false; //是否开始自动群发
     this.groups = [];
     this.ava_contacts = [];
-    this.quanCount = 0; //采集优惠券的数量
-    this.sendedIndex = 1; // 发送优惠券起始index
+    this.quan_count = 0; //采集优惠券的数量
+
     // 初始化indexedDB
     idb.initDb().then(db => {
       console.debug("initDb DONE,start to get quan count");
       // 获取优惠券数量
       idb.getCount(idb.STORE_NAME.TOTAL).then(count => {
         console.log('获取到优惠券数量');
-        return this.quanCount = count;
+        return this.quan_count = count;
       }, reason => {
         throw reason;
       });
@@ -13798,7 +13798,7 @@ class WxBot extends __WEBPACK_IMPORTED_MODULE_1_wechat4u___default.a {
   _storeQuan(data) {
     return idb.addItems(idb.STORE_NAME.TOTAL, data).then(() => {
       return idb.getCount(idb.STORE_NAME.TOTAL).then(count => {
-        return this.quanCount = count;
+        return this.quan_count = count;
       });
     });
   }
@@ -13808,14 +13808,14 @@ class WxBot extends __WEBPACK_IMPORTED_MODULE_1_wechat4u___default.a {
   */
   _startCaptureQuan() {
     let _this = this;
-    this.captrueQuan = true;
+    this.captrue_quan = true;
     function loop() {
       _this._requestQuan().then(data => {
         return _this._storeQuan(data);
       }, reason => {
         throw reason;
       }).then(() => {
-        if (_this.captrueQuan) {
+        if (_this.captrue_quan) {
           loop();
         }
       }, reason => {
@@ -13839,7 +13839,8 @@ class WxBot extends __WEBPACK_IMPORTED_MODULE_1_wechat4u___default.a {
         // 判断是否勾选群发
         if (contact.Checked) {
           this.sendMsg(obj, contact.UserName).then(() => {
-            return this.sendMsg(data.D_title, contact.UserName);
+            let msg_text = `今日推荐：${data.D_title}\n领${data.Quan_price}元独家券 券后【￥${data.Price}】包邮秒杀\n领券下单链接${data.Quan_link}\n本群专享优惠！已抢${data.Sales_num}件！`;
+            return this.sendMsg(msg_text, contact.UserName);
           }).catch(err => {
             this.emit('error', err);
           });
@@ -13850,25 +13851,37 @@ class WxBot extends __WEBPACK_IMPORTED_MODULE_1_wechat4u___default.a {
     });
   }
   /* 
-    @method 自动群发优惠券
+    @method 开启自动群发优惠券
   */
-  _startAutoSend() {
+  _startauto_send() {
     var _this = this;
-    _this.autoSend = true;
+    _this.auto_send = true;
     let t = setInterval(function () {
-      let l = _this.sendedIndex,
+      if (!_this.auto_send) {
+        clearInterval(t);
+        return false;
+      }
+      let l = +(localStorage.sended_quan_count || 1),
           count = 1,
-          u = l + 1;
+          u = l + count;
+
       idb.getRangeCursor(idb.STORE_NAME.TOTAL, l, u).then(cursor => {
         if (cursor) {
           let data = cursor.value;
           _this._sendQuanMsg(data).then(() => {
-            _this.sendedIndex = u; // 重新设置sendIndex
+            localStorage.sended_quan_count = u; // 重新设置sendIndex
           });
           cursor.continue();
         }
       });
     }, 1000 * 10);
+  }
+
+  /* 
+    @method 暂停群发
+  */
+  _stopauto_send() {
+    this.auto_send = false;
   }
   /* 
   * 更新微信群属性：是否选择群发
