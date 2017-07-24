@@ -68,6 +68,8 @@ var $vm = window.$vm = new Vue({
             this.groups = bot.groups;
         },
         login() {
+            // 使用新的bot实例，避免旧bot实例绑定过多事件
+            bot = bg_window.newBot();
             bot.on('user-avatar', avatar => {
                 $('.login_box .avatar img').attr('src', avatar)
                 this.page = 'confirm';
