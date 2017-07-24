@@ -43,6 +43,7 @@
             <dd>
                 发送间隔：<input id="auto-send-time-span" v-on:keyup="keyupHandler" type="text" v-bind:value="auto_send_time_span"/>秒
             </dd>
+            <dd><button id="btn-logout" v-on:click="clickHandler">注销</button></dd>
             <dt>已采集优惠券数量：{{quan_count}}</dt>
         </dl>
 

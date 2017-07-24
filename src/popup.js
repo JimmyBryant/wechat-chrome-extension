@@ -42,7 +42,7 @@ var $vm = window.$vm = new Vue({
                             bot.auto_captrue_quan = false;
                             elem.innerText = '开始采集优惠券';
                         }
-                        break;
+                    break;
                     case "auto-send":
                         if (!bot.auto_send) {
                             console.log('开始群发优惠券')
@@ -53,7 +53,10 @@ var $vm = window.$vm = new Vue({
                             bot._stopAutoSend();
                             
                         }
-                        break;
+                    break;
+                    case "btn-logout":
+                        logout();
+                    break;
                 }
             } else {
                 console.log('点击事件', elem)
@@ -65,7 +68,6 @@ var $vm = window.$vm = new Vue({
             this.groups = bot.groups;
         },
         login() {
-            bot = bg_window.newBot();
             bot.on('user-avatar', avatar => {
                 $('.login_box .avatar img').attr('src', avatar)
                 this.page = 'confirm';
@@ -78,7 +80,7 @@ var $vm = window.$vm = new Vue({
                 this.quan_count = bot.quan_count;
             });
             bot.on('logout', () => {
-                // 清楚登录信息
+                // 清除登录信息
                 delete localStorage.reloginProp;
                 this.login();
                 console.log('注销成功');
@@ -97,17 +99,12 @@ var $vm = window.$vm = new Vue({
                     .attr({ 'src': `https://login.weixin.qq.com/qrcode/${uuid}` })
             });
 
-            // bot.start();  
-
             if (bot.PROP.uin) {
                 // 存在登录数据时，可以随时调用restart进行重启
                 bot.restart()
             } else {
                 bot.start()
             }
-
-        },
-        initList() {
 
         }
     },
@@ -124,18 +121,6 @@ var $vm = window.$vm = new Vue({
             this.page = 'scan';
             this.login();
         }
-    },
-    page(val) {
-        console.log(val);
-        if (val == 'contacts') {
-            setTimeout(() => {
-                this.initList();
-            }, 0)
-        }
-    },
-    filerName(val) {
-        console.log(val);
-        this.initList();
     }
 });
 
@@ -176,16 +161,8 @@ function updateCheckedGroup(elem) {
 }
 
 function logout() {
-    let bot = bg_window.getBot();
-    bot.logout()
-        .then(() => {
-            login();
-        })
-        .catch(err => {
-            $vm.page.error = 'error';
-            console.log(err);
-            setTimeout(() => {
-                login();
-            }, 2000);
-        });
+    console.log('注销');
+    bot.stop();
+    $vm.page = 'scan';
+    $vm.login();
 }
