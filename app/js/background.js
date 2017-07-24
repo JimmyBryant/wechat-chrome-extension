@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 325);
+/******/ 	return __webpack_require__(__webpack_require__.s = 326);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -1677,7 +1677,7 @@ exports.RETURN = RETURN;
 "use strict";
 
 
-var bind = __webpack_require__(319);
+var bind = __webpack_require__(320);
 
 /*global toString:true*/
 
@@ -4532,8 +4532,8 @@ module.exports = function(iter, ITERATOR){
 
 
 
-var base64 = __webpack_require__(328)
-var ieee754 = __webpack_require__(329)
+var base64 = __webpack_require__(329)
+var ieee754 = __webpack_require__(330)
 var isArray = __webpack_require__(314)
 
 exports.Buffer = Buffer
@@ -6368,8 +6368,8 @@ var util = __webpack_require__(309);
 util.inherits = __webpack_require__(90);
 /*</replacement>*/
 
-var Readable = __webpack_require__(332);
-var Writable = __webpack_require__(335);
+var Readable = __webpack_require__(333);
+var Writable = __webpack_require__(336);
 
 util.inherits(Duplex, Readable);
 
@@ -7004,7 +7004,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _request = __webpack_require__(345);
+var _request = __webpack_require__(346);
 
 Object.keys(_request).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
@@ -7016,7 +7016,7 @@ Object.keys(_request).forEach(function (key) {
   });
 });
 
-var _global = __webpack_require__(324);
+var _global = __webpack_require__(325);
 
 Object.keys(_global).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
@@ -12438,7 +12438,7 @@ SafeBuffer.allocUnsafeSlow = function (size) {
  * Expose `debug()` as the module.
  */
 
-exports = module.exports = __webpack_require__(339);
+exports = module.exports = __webpack_require__(340);
 exports.log = log;
 exports.formatArgs = formatArgs;
 exports.save = save;
@@ -12645,10 +12645,10 @@ function getDefaultAdapter() {
   var adapter;
   if (typeof XMLHttpRequest !== 'undefined') {
     // For browsers use XHR adapter
-    adapter = __webpack_require__(320);
+    adapter = __webpack_require__(321);
   } else if (typeof process !== 'undefined') {
     // For node use HTTP adapter
-    adapter = __webpack_require__(320);
+    adapter = __webpack_require__(321);
   }
   return adapter;
 }
@@ -13279,6 +13279,12 @@ function base64DetectIncompleteChar(buffer) {
 /* 319 */
 /***/ (function(module, exports, __webpack_require__) {
 
+module.exports = __webpack_require__(347);
+
+/***/ }),
+/* 320 */
+/***/ (function(module, exports, __webpack_require__) {
+
 "use strict";
 
 
@@ -13294,7 +13300,7 @@ module.exports = function bind(fn, thisArg) {
 
 
 /***/ }),
-/* 320 */
+/* 321 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13305,7 +13311,7 @@ var settle = __webpack_require__(350);
 var buildURL = __webpack_require__(352);
 var parseHeaders = __webpack_require__(353);
 var isURLSameOrigin = __webpack_require__(354);
-var createError = __webpack_require__(321);
+var createError = __webpack_require__(322);
 var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(355);
 
 module.exports = function xhrAdapter(config) {
@@ -13479,7 +13485,7 @@ module.exports = function xhrAdapter(config) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(42)))
 
 /***/ }),
-/* 321 */
+/* 322 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13503,7 +13509,7 @@ module.exports = function createError(message, config, code, response) {
 
 
 /***/ }),
-/* 322 */
+/* 323 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13515,7 +13521,7 @@ module.exports = function isCancel(value) {
 
 
 /***/ }),
-/* 323 */
+/* 324 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13541,7 +13547,7 @@ module.exports = Cancel;
 
 
 /***/ }),
-/* 324 */
+/* 325 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13653,26 +13659,27 @@ function getDeviceID() {
 //# sourceMappingURL=global.js.map
 
 /***/ }),
-/* 325 */
+/* 326 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* WEBPACK VAR INJECTION */(function(console) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_polyfill__ = __webpack_require__(126);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_polyfill___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_polyfill__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_wechat4u__ = __webpack_require__(326);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_wechat4u__ = __webpack_require__(327);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_wechat4u___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_wechat4u__);
 
 
 
 
-let idb = __webpack_require__(371);
+let alimama = __webpack_require__(369);
+let idb = __webpack_require__(370);
 
 class WxBot extends __WEBPACK_IMPORTED_MODULE_1_wechat4u___default.a {
 
   constructor(data) {
     super(data);
-    this.captrue_quan = false; // 是否开始采集优惠券
+    this.auto_captrue_quan = false; // 是否开始自动采集优惠券
     this.auto_send = false; //是否开始自动群发
     this.groups = [];
     this.ava_contacts = [];
@@ -13680,10 +13687,9 @@ class WxBot extends __WEBPACK_IMPORTED_MODULE_1_wechat4u___default.a {
 
     // 初始化indexedDB
     idb.initDb().then(db => {
-      console.debug("initDb DONE,start to get quan count");
       // 获取优惠券数量
       idb.getCount(idb.STORE_NAME.TOTAL).then(count => {
-        console.log('获取到优惠券数量');
+        console.debug('获取到优惠券数量:', count);
         return this.quan_count = count;
       }, reason => {
         throw reason;
@@ -13808,14 +13814,14 @@ class WxBot extends __WEBPACK_IMPORTED_MODULE_1_wechat4u___default.a {
   */
   _startCaptureQuan() {
     let _this = this;
-    this.captrue_quan = true;
+    this.auto_captrue_quan = true;
     function loop() {
       _this._requestQuan().then(data => {
         return _this._storeQuan(data);
       }, reason => {
         throw reason;
       }).then(() => {
-        if (_this.captrue_quan) {
+        if (_this.auto_captrue_quan) {
           loop();
         }
       }, reason => {
@@ -13839,7 +13845,7 @@ class WxBot extends __WEBPACK_IMPORTED_MODULE_1_wechat4u___default.a {
         // 判断是否勾选群发
         if (contact.Checked) {
           this.sendMsg(obj, contact.UserName).then(() => {
-            let msg_text = `今日推荐：${data.D_title}\n领${data.Quan_price}元独家券 券后【￥${data.Price}】包邮秒杀\n领券下单链接${data.Quan_link}\n本群专享优惠！已抢${data.Sales_num}件！`;
+            let msg_text = `今日推荐：${data.D_title}\n领${data.Quan_price}元独家券 券后【￥${data.Price}】包邮秒杀\n领券下单链接${data.Quan_link}\n查看商品：复制这条信息${data.Token}，打开☞手机淘宝☜即可购买！`;
             return this.sendMsg(msg_text, contact.UserName);
           }).catch(err => {
             this.emit('error', err);
@@ -13853,7 +13859,7 @@ class WxBot extends __WEBPACK_IMPORTED_MODULE_1_wechat4u___default.a {
   /* 
     @method 开启自动群发优惠券
   */
-  _startauto_send() {
+  _startAutoSend() {
     var _this = this;
     _this.auto_send = true;
     let t = setInterval(function () {
@@ -13868,8 +13874,17 @@ class WxBot extends __WEBPACK_IMPORTED_MODULE_1_wechat4u___default.a {
       idb.getRangeCursor(idb.STORE_NAME.TOTAL, l, u).then(cursor => {
         if (cursor) {
           let data = cursor.value;
-          _this._sendQuanMsg(data).then(() => {
-            localStorage.sended_quan_count = u; // 重新设置sendIndex
+          alimama.getToken(data.GoodsID).then(res => {
+            let taoToken = res.data.taoToken;
+            data.Token = taoToken;
+            return data;
+          }, reason => {
+            throw reason;
+          }).then(data => {
+            return _this._sendQuanMsg(data).then(() => {
+              localStorage.sended_quan_count = u; // 重新设置sendIndex
+              return u;
+            });
           });
           cursor.continue();
         }
@@ -13880,7 +13895,7 @@ class WxBot extends __WEBPACK_IMPORTED_MODULE_1_wechat4u___default.a {
   /* 
     @method 暂停群发
   */
-  _stopauto_send() {
+  _stopAutoSend() {
     this.auto_send = false;
   }
   /* 
@@ -13922,7 +13937,7 @@ window.getWxState = () => {
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(41)))
 
 /***/ }),
-/* 326 */
+/* 327 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13932,7 +13947,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _core = __webpack_require__(327);
+var _core = __webpack_require__(328);
 
 var _core2 = _interopRequireDefault(_core);
 
@@ -14028,7 +14043,6 @@ var Wechat = function (_WechatCore) {
       var _this3 = this;
 
       var id = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : ++this.syncPollingId;
-
       if (this.state !== this.CONF.STATE.login || this.syncPollingId !== id) {
         return;
       }
@@ -14039,6 +14053,8 @@ var Wechat = function (_WechatCore) {
             _this3.syncErrorCount = 0;
             _this3.handleSync(data);
           });
+        }else if(selector===undefined){
+          throw 'Sync Check发生错误'
         }
       }).then(function () {
         _this3.lastSyncTime = Date.now();
@@ -14089,6 +14105,8 @@ var Wechat = function (_WechatCore) {
             return _this4.batchGetContact(emptyGroup).then(function (_contacts) {
               return contacts = contacts.concat(_contacts || []);
             });
+          }else{
+            return emptyGroup;
           }
         } else {
           return contacts;
@@ -14389,11 +14407,11 @@ exports = module.exports = Wechat;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(42), __webpack_require__(41)))
 
 /***/ }),
-/* 327 */
+/* 328 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(Buffer, console) {
+/* WEBPACK VAR INJECTION */(function(console, Buffer) {
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -14405,7 +14423,7 @@ var _path = __webpack_require__(315);
 
 var _path2 = _interopRequireDefault(_path);
 
-var _bl = __webpack_require__(330);
+var _bl = __webpack_require__(331);
 
 var _bl2 = _interopRequireDefault(_bl);
 
@@ -14413,11 +14431,11 @@ var _debug2 = __webpack_require__(312);
 
 var _debug3 = _interopRequireDefault(_debug2);
 
-var _formData = __webpack_require__(341);
+var _formData = __webpack_require__(342);
 
 var _formData2 = _interopRequireDefault(_formData);
 
-var _mime = __webpack_require__(342);
+var _mime = __webpack_require__(343);
 
 var _mime2 = _interopRequireDefault(_mime);
 
@@ -14744,20 +14762,42 @@ var WechatCore = function () {
           'deviceid': (0, _util.getDeviceID)(),
           'synckey': _this9.PROP.formatedSyncKey
         };
-        return _this9.request({
+        let xhr = new XMLHttpRequest();
+        let arr = [],qstr='';
+        for(var key in params){
+          arr.push(key+'='+params[key]);
+        }
+        qstr = arr.join('&');
+        xhr.open('get',_this9.CONF.API_synccheck+'?'+qstr);
+        xhr.send();
+        return new Promise(function(resolve,reject){
+          xhr.addEventListener('load',function(){
+              var res = {
+                data:xhr.response
+              }
+              resolve(res);      
+          }
+        )})
+/*         return _this9.request({
           method: 'GET',
           url: _this9.CONF.API_synccheck,
           params: params
-        }).then(function (res) {
+        }) */
+        .then(function (res) {
           var window = {
             synccheck: {}
           };
-
           // eslint-disable-next-line
-          eval(res.data);
+          try{eval(res.data);}catch(err){
+            console.error('有错误：',res.data);
+            throw err
+          }
           _util.assert.equal(window.synccheck.retcode, _this9.CONF.SYNCCHECK_RET_SUCCESS, res);
-
           return window.synccheck.selector;
+        }).catch(function(err){
+          debug(err);
+          err.tips = '乱码了';
+          throw err;
         });
       }).catch(function (err) {
         debug(err);
@@ -15750,10 +15790,10 @@ var WechatCore = function () {
 
 exports.default = WechatCore;
 //# sourceMappingURL=core.js.map
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(119).Buffer, __webpack_require__(41)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(41), __webpack_require__(119).Buffer))
 
 /***/ }),
-/* 328 */
+/* 329 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -15874,7 +15914,7 @@ function fromByteArray (uint8) {
 
 
 /***/ }),
-/* 329 */
+/* 330 */
 /***/ (function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -15964,10 +16004,10 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 
 /***/ }),
-/* 330 */
+/* 331 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(Buffer) {var DuplexStream = __webpack_require__(331)
+/* WEBPACK VAR INJECTION */(function(Buffer) {var DuplexStream = __webpack_require__(332)
   , util         = __webpack_require__(89)
 
 
@@ -16251,14 +16291,14 @@ module.exports = BufferList
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(119).Buffer))
 
 /***/ }),
-/* 331 */
+/* 332 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(120);
 
 
 /***/ }),
-/* 332 */
+/* 333 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16333,7 +16373,7 @@ util.inherits = __webpack_require__(90);
 /*</replacement>*/
 
 /*<replacement>*/
-var debugUtil = __webpack_require__(333);
+var debugUtil = __webpack_require__(334);
 var debug = void 0;
 if (debugUtil && debugUtil.debuglog) {
   debug = debugUtil.debuglog('stream');
@@ -16342,7 +16382,7 @@ if (debugUtil && debugUtil.debuglog) {
 }
 /*</replacement>*/
 
-var BufferList = __webpack_require__(334);
+var BufferList = __webpack_require__(335);
 var destroyImpl = __webpack_require__(317);
 var StringDecoder;
 
@@ -17272,13 +17312,13 @@ function indexOf(xs, x) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(28), __webpack_require__(42)))
 
 /***/ }),
-/* 333 */
+/* 334 */
 /***/ (function(module, exports) {
 
 /* (ignored) */
 
 /***/ }),
-/* 334 */
+/* 335 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17358,7 +17398,7 @@ module.exports = function () {
 }();
 
 /***/ }),
-/* 335 */
+/* 336 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17434,7 +17474,7 @@ util.inherits = __webpack_require__(90);
 
 /*<replacement>*/
 var internalUtil = {
-  deprecate: __webpack_require__(338)
+  deprecate: __webpack_require__(339)
 };
 /*</replacement>*/
 
@@ -18026,10 +18066,10 @@ Writable.prototype._destroy = function (err, cb) {
   this.end();
   cb(err);
 };
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(42), __webpack_require__(336).setImmediate, __webpack_require__(28)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(42), __webpack_require__(337).setImmediate, __webpack_require__(28)))
 
 /***/ }),
-/* 336 */
+/* 337 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var apply = Function.prototype.apply;
@@ -18082,13 +18122,13 @@ exports._unrefActive = exports.active = function(item) {
 };
 
 // setimmediate attaches itself to the global object
-__webpack_require__(337);
+__webpack_require__(338);
 exports.setImmediate = setImmediate;
 exports.clearImmediate = clearImmediate;
 
 
 /***/ }),
-/* 337 */
+/* 338 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
@@ -18281,7 +18321,7 @@ exports.clearImmediate = clearImmediate;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(28), __webpack_require__(42)))
 
 /***/ }),
-/* 338 */
+/* 339 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(console, global) {
@@ -18355,7 +18395,7 @@ function config (name) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(41), __webpack_require__(28)))
 
 /***/ }),
-/* 339 */
+/* 340 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(console) {
@@ -18371,7 +18411,7 @@ exports.coerce = coerce;
 exports.disable = disable;
 exports.enable = enable;
 exports.enabled = enabled;
-exports.humanize = __webpack_require__(340);
+exports.humanize = __webpack_require__(341);
 
 /**
  * The currently active debug mode names, and names to skip.
@@ -18564,7 +18604,7 @@ function coerce(val) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(41)))
 
 /***/ }),
-/* 340 */
+/* 341 */
 /***/ (function(module, exports) {
 
 /**
@@ -18722,7 +18762,7 @@ function plural(ms, n, name) {
 
 
 /***/ }),
-/* 341 */
+/* 342 */
 /***/ (function(module, exports) {
 
 /* eslint-env browser */
@@ -18730,11 +18770,11 @@ module.exports = typeof self == 'object' ? self.FormData : window.FormData;
 
 
 /***/ }),
-/* 342 */
+/* 343 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(process, console) {var path = __webpack_require__(315);
-var fs = __webpack_require__(343);
+var fs = __webpack_require__(344);
 
 function Mime() {
   // Map of extension -> mime type
@@ -18819,7 +18859,7 @@ Mime.prototype.extension = function(mimeType) {
 var mime = new Mime();
 
 // Define built-in types
-mime.define(__webpack_require__(344));
+mime.define(__webpack_require__(345));
 
 // Default type
 mime.default_type = mime.lookup('bin');
@@ -18845,13 +18885,13 @@ module.exports = mime;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(42), __webpack_require__(41)))
 
 /***/ }),
-/* 343 */
+/* 344 */
 /***/ (function(module, exports) {
 
 
 
 /***/ }),
-/* 344 */
+/* 345 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -21570,7 +21610,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 345 */
+/* 346 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21581,11 +21621,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Request = Request;
 
-var _axios = __webpack_require__(346);
+var _axios = __webpack_require__(319);
 
 var _axios2 = _interopRequireDefault(_axios);
 
-var _global = __webpack_require__(324);
+var _global = __webpack_require__(325);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -21649,12 +21689,6 @@ function Request(defaults) {
 //# sourceMappingURL=request.js.map
 
 /***/ }),
-/* 346 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(347);
-
-/***/ }),
 /* 347 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -21662,7 +21696,7 @@ module.exports = __webpack_require__(347);
 
 
 var utils = __webpack_require__(48);
-var bind = __webpack_require__(319);
+var bind = __webpack_require__(320);
 var Axios = __webpack_require__(348);
 var defaults = __webpack_require__(313);
 
@@ -21697,9 +21731,9 @@ axios.create = function create(instanceConfig) {
 };
 
 // Expose Cancel & CancelToken
-axios.Cancel = __webpack_require__(323);
+axios.Cancel = __webpack_require__(324);
 axios.CancelToken = __webpack_require__(362);
-axios.isCancel = __webpack_require__(322);
+axios.isCancel = __webpack_require__(323);
 
 // Expose all/spread
 axios.all = function all(promises) {
@@ -21831,7 +21865,7 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
 "use strict";
 
 
-var createError = __webpack_require__(321);
+var createError = __webpack_require__(322);
 
 /**
  * Resolve or reject a Promise based on response status.
@@ -22247,7 +22281,7 @@ module.exports = InterceptorManager;
 
 var utils = __webpack_require__(48);
 var transformData = __webpack_require__(359);
-var isCancel = __webpack_require__(322);
+var isCancel = __webpack_require__(323);
 var defaults = __webpack_require__(313);
 
 /**
@@ -22398,7 +22432,7 @@ module.exports = function combineURLs(baseURL, relativeURL) {
 "use strict";
 
 
-var Cancel = __webpack_require__(323);
+var Cancel = __webpack_require__(324);
 
 /**
  * A `CancelToken` is an object that can be used to request cancellation of an operation.
@@ -40063,9 +40097,68 @@ function MessageFactory(instance) {
 //# sourceMappingURL=message.js.map
 
 /***/ }),
-/* 369 */,
-/* 370 */,
-/* 371 */
+/* 369 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let axios = __webpack_require__(319);
+let alimama = {
+    getAdZone() {
+        let url = 'http://pub.alimama.com/common/adzone/newSelfAdzone2.json?tag=29&itemId=552220693426&blockId=&t=1500866067226&_tb_token_=qZfgrBNDmpq&pvid=10_222.188.153.160_576_1500862980397';
+        let params = {};
+    },
+    /* 
+        @param {Integer} id  商品id
+        @return {Promise}
+    */
+    getToken(id) {
+        // 先获取cookie
+        return new Promise((resolve, reject) => {
+            chrome.cookies.get({
+                url: 'http://pub.alimama.com',
+                name: '_tb_token_'
+            }, function (cookie) {
+                resolve(cookie);
+            });
+        }).then(cookie => {
+            if (!cookie) {
+                let err = { tip: '还未登录阿里妈妈' };
+                throw err;
+            }
+            let url = 'http://pub.alimama.com/common/code/getAuctionCode.json';
+            let params = {
+                auctionid: id,
+                adzoneid: '110582761',
+                siteid: '29668844',
+                scenes: 1,
+                t: Date.now(),
+                _tb_token_: cookie.value
+
+            };
+            return axios.request({
+                url: url,
+                method: 'get',
+                params: params
+            }).then(res => {
+                // 如果返回的是字符串，表示登录失效
+                if (res.data.length > 0) {
+                    let err = { tip: '还未登录阿里妈妈' };
+                    throw err;
+                }
+                return res.data;
+            }).catch(err => {
+                throw err;
+            });
+        });
+    }
+};
+
+exports = module.exports = alimama;
+
+/***/ }),
+/* 370 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -40085,7 +40178,6 @@ let idb = {
     *   创建存储空间
     */
     initDb() {
-        console.debug("initDb ...");
         return new Promise((resolve, reject) => {
             var req = indexedDB.open(DB_NAME, DB_VERSION);
             req.onsuccess = function (event) {

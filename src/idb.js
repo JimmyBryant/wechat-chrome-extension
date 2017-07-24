@@ -13,7 +13,6 @@ let idb = {
     *   创建存储空间
     */
     initDb() {
-        console.debug("initDb ...");
         return new Promise((resolve,reject)=>{
             var req = indexedDB.open(DB_NAME, DB_VERSION);
             req.onsuccess = function (event) {

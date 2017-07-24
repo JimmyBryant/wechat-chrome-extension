@@ -34,7 +34,9 @@
         <div v-if="groups.length">
         <div>
             <h4>已采集优惠券数量:{{quan_count}}</h4>
-            <button class="btn" id="capture-quan"  v-on:click="clickHandler">开始采集优惠券</button>
+            <button class="btn" id="capture-quan"  v-on:click="clickHandler" v-if="auto_captrue_state">停止采集优惠券</button>
+            <button class="btn" id="capture-quan"  v-on:click="clickHandler" v-else>开始采集优惠券</button>
+            
             <button class="btn" id="auto-send"  v-on:click="clickHandler" v-if="auto_send_state">暂停群发优惠券</button>
             <button class="btn" id="auto-send"  v-on:click="clickHandler" v-else>开始群发优惠券</button>
         </div>

@@ -11,6 +11,7 @@ var $vm = window.$vm = new Vue({
         contacts: [],
         groups: [],
         quan_count: 0,
+        auto_captrue_state:false,
         auto_send_state:false,
         filterName: ''
     },
@@ -20,23 +21,23 @@ var $vm = window.$vm = new Vue({
             if (elem.id) {
                 switch (elem.id) {
                     case "capture-quan":
-                        if (!bot.captrue_quan) {
+                        if (!bot.auto_captrue_quan) {
                             console.log('开始采集优惠券')
                             bot._startCaptureQuan();
                             elem.innerText = '停止采集优惠券';
                         } else {
-                            bot.captrue_quan = false;
+                            bot.auto_captrue_quan = false;
                             elem.innerText = '开始采集优惠券';
                         }
                         break;
                     case "auto-send":
                         if (!bot.auto_send) {
                             console.log('开始群发优惠券')
-                            bot._startauto_send();
+                            bot._startAutoSend();
                             elem.innerText = '停止群发优惠券';
                         } else {
                             elem.innerText = '开始群发优惠券';
-                            bot._stopauto_send();
+                            bot._stopAutoSend();
                             
                         }
                         break;
@@ -58,7 +59,7 @@ var $vm = window.$vm = new Vue({
             });
             bot.on('login', () => {
                 console.log('登录成功')
-                    // 保存数据，方便快速登录
+                // 保存数据，方便快速登录
                 localStorage.reloginProp = JSON.stringify(bot.botData)
                 this.showContacts();
                 this.quan_count = bot.quan_count;
@@ -66,7 +67,8 @@ var $vm = window.$vm = new Vue({
             bot.on('logout', () => {
                 // 清楚登录信息
                 delete localStorage.reloginProp;
-                console.log('注销成功')
+                this.login();
+                console.log('注销成功');
             });
             bot.on('error', err => {
                 console.log(err);
@@ -104,6 +106,7 @@ var $vm = window.$vm = new Vue({
             this.showContacts();
             this.quan_count = bot.quan_count;
             this.auto_send_state = bot.auto_send;
+            this.auto_captrue_state = bot.auto_captrue_quan;
         } else {
             this.page = 'scan';
             this.login();
