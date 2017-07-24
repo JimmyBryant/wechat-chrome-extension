@@ -32,14 +32,20 @@
 
     <div class="contact_list" v-show="page == 'contacts'">
         <div v-if="groups.length">
-        <div>
-            <h4>已采集优惠券数量:{{quan_count}}</h4>
-            <button class="btn" id="capture-quan"  v-on:click="clickHandler" v-if="auto_captrue_state">停止采集优惠券</button>
-            <button class="btn" id="capture-quan"  v-on:click="clickHandler" v-else>开始采集优惠券</button>
+        <dl class="control-box">
+            <dd>            
+                <button class="btn" id="capture-quan"  v-on:click="clickHandler" v-if="auto_captrue_state">停止采集优惠券</button>
+                <button class="btn" id="capture-quan"  v-on:click="clickHandler" v-else>开始采集优惠券</button>
             
-            <button class="btn" id="auto-send"  v-on:click="clickHandler" v-if="auto_send_state">暂停群发优惠券</button>
-            <button class="btn" id="auto-send"  v-on:click="clickHandler" v-else>开始群发优惠券</button>
-        </div>
+                <button class="btn" id="auto-send"  v-on:click="clickHandler" v-if="auto_send_state">暂停群发优惠券</button>
+                <button class="btn" id="auto-send"  v-on:click="clickHandler" v-else>开始群发优惠券</button>
+            </dd>
+            <dd>
+                发送间隔：<input id="auto-send-time-span" v-on:keyup="keyupHandler" type="text" v-bind:value="auto_send_time_span"/>秒
+            </dd>
+            <dt>已采集优惠券数量：{{quan_count}}</dt>
+        </dl>
+
         <div class="ng-scope">
             <h4 class="contact_title ng-scope">微信群</h4>
         </div>

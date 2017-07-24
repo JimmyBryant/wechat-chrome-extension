@@ -13,9 +13,22 @@ var $vm = window.$vm = new Vue({
         quan_count: 0,
         auto_captrue_state:false,
         auto_send_state:false,
-        filterName: ''
+        filterName: '',
+        auto_send_time_span:localStorage.auto_send_time_span||20 //自动发送优惠券间隔,单位秒
     },
     methods: {
+        keyupHandler(e){
+            let elem = e.target;
+            if(elem.id){
+                switch(elem.id){
+                    case "auto-send-time-span":
+                        if(!isNaN(parseInt(elem.value))){
+                            this.auto_send_time_span = localStorage.auto_send_time_span = parseInt(elem.value);
+                        }
+                    break;
+                }
+            }
+        },
         clickHandler(e) {
             let elem = e.target;
             if (elem.id) {
@@ -33,7 +46,7 @@ var $vm = window.$vm = new Vue({
                     case "auto-send":
                         if (!bot.auto_send) {
                             console.log('开始群发优惠券')
-                            bot._startAutoSend();
+                            bot._startAutoSend(this.auto_send_time_span);
                             elem.innerText = '停止群发优惠券';
                         } else {
                             elem.innerText = '开始群发优惠券';

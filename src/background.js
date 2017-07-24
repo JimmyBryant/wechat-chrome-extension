@@ -140,7 +140,7 @@ class WxBot extends Wechat {
   }
 
   /* 
-    开始采集优惠券
+    @method 开始采集优惠券
   */
   _startCaptureQuan(){
     let _this = this;
@@ -160,6 +160,9 @@ class WxBot extends Wechat {
     }
     loop();
   }
+  /* 
+    @method 发送优惠券消息
+  */
   _sendQuanMsg(data){
     let pic = data.Pic;
     let filename = pic.substring(pic.lastIndexOf('/')+1);
@@ -180,19 +183,17 @@ class WxBot extends Wechat {
           }).catch(err => {
             this.emit('error', err)
           })
-          
         }
       });
-    }).catch(err=>{throw err});
-
-    
+    }).catch(err=>{throw err}); 
   }
   /* 
     @method 开启自动群发优惠券
   */
-  _startAutoSend(){
+  _startAutoSend(time_span=20){
     var _this = this;
     _this.auto_send = true; 
+
     let t = setInterval(function(){
       if(!_this.auto_send){
         clearInterval(t);
@@ -211,9 +212,15 @@ class WxBot extends Wechat {
             data.Token = taoToken;
             return data;
           },reason=>{
+            if(confirm('需要登录阿里妈妈才能转换淘口令，是否现在登录?')){
+              chrome.tabs.create({
+                url:'https://www.alimama.com/member/login.htm'
+              })
+            }
             throw  reason;
           }).then(data=>{
             return _this._sendQuanMsg(data).then(()=>{
+              console.log('发送第',u,'条优惠券',new Date());
               localStorage.sended_quan_count = u;  // 重新设置sendIndex
               return u;
             });
@@ -221,7 +228,7 @@ class WxBot extends Wechat {
           cursor.continue();
         }
       })
-    },1000*10)
+    },1000*time_span);
   }
 
   /* 
@@ -230,8 +237,8 @@ class WxBot extends Wechat {
   _stopAutoSend(){
     this.auto_send = false; 
   }
-  /* 
-  * 更新微信群属性：是否选择群发
+  /*
+  *  @method 更新微信群属性：是否群发
   */
   updateGroups(){
     if(localStorage.checkedGroup){
