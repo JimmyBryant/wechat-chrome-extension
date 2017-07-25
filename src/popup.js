@@ -14,7 +14,7 @@ var $vm = window.$vm = new Vue({
         auto_captrue_state:false,
         auto_send_state:false,
         filterName: '',
-        capture_quan_page:localStorage.capture_quan_page||6,    //默认采集前6页数据
+        max_quan_page:localStorage.max_quan_page||2,    //默认采集前6页数据
         auto_send_time_span:localStorage.auto_send_time_span||20 //自动发送优惠券间隔,单位秒
     },
     methods: {
@@ -27,9 +27,9 @@ var $vm = window.$vm = new Vue({
                             this.auto_send_time_span = localStorage.auto_send_time_span = parseInt(elem.value);
                         }
                     break;
-                    case "capture-quan-page":
+                    case "max-quan-page":
                         if(!isNaN(parseInt(elem.value))){
-                            this.capture_quan_page = localStorage.capture_quan_page = parseInt(elem.value);
+                            this.max_quan_page = localStorage.max_quan_page = parseInt(elem.value);
                         }
                     break;
                 }
@@ -42,7 +42,7 @@ var $vm = window.$vm = new Vue({
                     case "capture-quan":
                         if (!bot.auto_captrue_quan) {
                             console.log('开始采集优惠券')
-                            bot._startCaptureQuan(this.capture_quan_page)
+                            bot._startCaptureQuan(this.max_quan_page)
                             .then(p=>{
                             elem.innerText = '开始采集优惠券';
                             var notification = new Notification('优惠券抓取成功', {

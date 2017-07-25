@@ -13747,7 +13747,7 @@ class WxBot extends __WEBPACK_IMPORTED_MODULE_1_wechat4u___default.a {
       let new_version = old_version + 1;
       localStorage.captrue_date = date_str;
       localStorage.db_version = new_version; // 存储db version
-      localStorage.page = 1; //设置开始采集的页数
+      localStorage.quan_page = 1; //设置开始采集的页数
       localStorage.sended_quan_count = 1; //设置开始发送优惠券的页数
       return new_version;
     } else {
@@ -13798,7 +13798,7 @@ class WxBot extends __WEBPACK_IMPORTED_MODULE_1_wechat4u___default.a {
   }
 
   _requestQuan() {
-    let page = localStorage.page || 1;
+    let page = localStorage.quan_page || 1;
     let params = {
       'r': 'Port/index',
       'type': 'total',
@@ -13812,7 +13812,7 @@ class WxBot extends __WEBPACK_IMPORTED_MODULE_1_wechat4u___default.a {
       params: params
     }).then(res => {
       let data = res.data;
-      localStorage.page = ++page;
+      localStorage.quan_page = ++page;
       return data.result;
     }).catch(err => {
       console.log(err);
@@ -13841,9 +13841,10 @@ class WxBot extends __WEBPACK_IMPORTED_MODULE_1_wechat4u___default.a {
     this.auto_captrue_quan = true;
     return new Promise((resolve, reject) => {
       function loop() {
-        if (localStorage.page > max_page) {
+        if (localStorage.quan_page > max_page) {
           _this._stopCaptureQuan();
           resolve(max_page);
+          return false;
         }
         _this._requestQuan().then(data => {
           return _this._storeQuan(data);
