@@ -24,7 +24,8 @@ let taoQuan = {
     },
     requestTotal(){
         console.debug('采集所有优惠券')
-        let page = localStorage.quan_page||1;
+        let quan_page = localStorage.quan_page||0;
+        let page = quan_page+1;
         let params = {
         'r': 'Port/index',
         'type': 'total',
@@ -38,7 +39,7 @@ let taoQuan = {
             params: params      
         }).then(res=>{
             let data = res.data;
-            localStorage.quan_page = ++page;
+            localStorage.quan_page = page;
             return  data.result;
         }).catch(err=>{
             throw err;

@@ -79,8 +79,8 @@ class WxBot extends Wechat {
       let new_version = old_version+1;
       localStorage.captrue_date = date_str;
       localStorage.db_version = new_version; // 存储db version
-      localStorage.quan_page = 1;  //设置开始采集的页数
-      localStorage.sended_quan_count = 1; //设置开始发送优惠券的页数
+      localStorage.quan_page = 0;  //表示目前采集0页
+      localStorage.sended_quan_count = 0; //表示已经发送优惠券数量
       return new_version;
     }else{
       return localStorage.db_version;
@@ -137,22 +137,34 @@ class WxBot extends Wechat {
     this.auto_captrue_quan = true;
     return new Promise((resolve,reject)=>{
       function loop(){
-        if(localStorage.quan_page>max_page){
+        if(localStorage.quan_page>=max_page){
           _this._stopCaptureQuan();
           resolve(max_page);
           return false;
         }
-        taoQuan.requestTotal().then(data=>{
-          return taoQuan.storeQuan(CONF.STORE_NAME.TOTAL,data)
+        let p = Promise.resolve();
+        // 表示还没开始采集
+        if(localStorage.quan_page==0){
+          p = taoQuan.requestTop100().then(data=>{  // 先采集top100商品
+            taoQuan.storeQuan(CONF.STORE_NAME.TOTAL,data)
+          },reason=>{
+            throw reason;
+          });
+        }
+        p.then(()=>{
+          // 再采集全站商品
+          return taoQuan.requestTotal()
+        },reason=>{
+          throw reason
+        }).then(data=>{
+          taoQuan.storeQuan(CONF.STORE_NAME.TOTAL,data)
         },reason=>{
           throw reason;
         }).then(()=>{
           if(_this.auto_captrue_quan){
             loop();
           }
-        },reason=>{
-          throw reason;
-        });
+        })
       }
       loop();
     });
@@ -204,7 +216,7 @@ class WxBot extends Wechat {
         clearInterval(t);
         return false;
       }
-      let l = +(localStorage.sended_quan_count||1)
+      let l = +(localStorage.sended_quan_count||0)+1
           ,count = 1
           ,u = l+count
           ;
@@ -230,7 +242,7 @@ class WxBot extends Wechat {
           }).then(data=>{
             return _this._sendQuanMsg(data).then(()=>{
               console.log('发送第',u,'条优惠券',new Date());
-              localStorage.sended_quan_count = u;  // 重新设置sendIndex
+              localStorage.sended_quan_count = l;  // 设置已经发送优惠券数量
               return u;
             });
           });
