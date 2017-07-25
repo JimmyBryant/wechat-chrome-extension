@@ -14,6 +14,7 @@ var $vm = window.$vm = new Vue({
         auto_captrue_state:false,
         auto_send_state:false,
         filterName: '',
+        sended_quan_count:localStorage.sended_quan_count||0,
         max_quan_page:localStorage.max_quan_page||2,    //默认采集前6页数据
         auto_send_time_span:localStorage.auto_send_time_span||30 //自动发送优惠券间隔,单位秒
     },
@@ -24,13 +25,11 @@ var $vm = window.$vm = new Vue({
                 switch(elem.id){
                     case "auto-send-time-span":
                         if(!isNaN(parseInt(elem.value))){
-                            this.auto_send_time_span =  parseInt(elem.value);
                             localStorage.auto_send_time_span = parseInt(elem.value);
                         }
                     break;
                     case "max-quan-page":
                         if(!isNaN(parseInt(elem.value))){
-                            this.max_quan_page = localStorage.max_quan_page = parseInt(elem.value);
                             localStorage.max_quan_page = parseInt(elem.value);
                         }
                     break;
@@ -44,7 +43,7 @@ var $vm = window.$vm = new Vue({
                     case "capture-quan":
                         if (!bot.auto_captrue_quan) {
                             console.log('开始采集优惠券')
-                            bot._startCaptureQuan(this.max_quan_page)
+                            bot._startCaptureQuan(localStorage.max_quan_page)
                             .then(p=>{
                             elem.innerText = '开始采集优惠券';
                             var notification = new Notification('优惠券抓取成功', {

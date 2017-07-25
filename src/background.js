@@ -212,14 +212,15 @@ class WxBot extends Wechat {
   _startAutoSend(time_span=20){
     var _this = this;
     _this.auto_send = true; 
+    let t = setInterval(send,1000*time_span);
+    
     function send(){
       if(!_this.auto_send){
         clearInterval(t);
         return false;
       }
       let low = +(localStorage.sended_quan_count||0)+1
-          ,count = 1
-          ,up = low+count
+          ,up = low+1
           ;
 
       idb.getRangeCursor(CONF.STORE_NAME.TOTAL,low,up).then(cursor=>{
@@ -260,7 +261,6 @@ class WxBot extends Wechat {
         }
       })
     }
-    let t = setInterval(send,1000*time_span);
   }
 
   /* 

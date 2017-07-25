@@ -126,7 +126,7 @@ html,body,p,h4{
     margin: 0;
 }
 input.custom-short-input{
-    width: 10%;
+    width: 20%;
     margin: 0 .5rem;
     border: 1px solid #ddd;
     padding: 0.2rem 0.5rem;

@@ -13879,14 +13879,15 @@ class WxBot extends __WEBPACK_IMPORTED_MODULE_1_wechat4u___default.a {
   _startAutoSend(time_span = 20) {
     var _this = this;
     _this.auto_send = true;
+    let t = setInterval(send, 1000 * time_span);
+
     function send() {
       if (!_this.auto_send) {
         clearInterval(t);
         return false;
       }
       let low = +(localStorage.sended_quan_count || 0) + 1,
-          count = 1,
-          up = low + count;
+          up = low + 1;
 
       idb.getRangeCursor(CONF.STORE_NAME.TOTAL, low, up).then(cursor => {
         if (cursor) {
@@ -13926,7 +13927,6 @@ class WxBot extends __WEBPACK_IMPORTED_MODULE_1_wechat4u___default.a {
         }
       });
     }
-    let t = setInterval(send, 1000 * time_span);
   }
 
   /* 
@@ -40268,6 +40268,13 @@ exports = module.exports = idb;
 
 let axios = __webpack_require__(346);
 let alimama = {
+    /* 
+        模拟阿里妈妈登录
+        @method
+    */
+    login() {
+        let psd = 'kuangkuang324796';
+    },
     getAdZone() {
         let url = 'http://pub.alimama.com/common/adzone/newSelfAdzone2.json?tag=29&itemId=552220693426&blockId=&t=1500866067226&_tb_token_=qZfgrBNDmpq&pvid=10_222.188.153.160_576_1500862980397';
         let params = {};

@@ -37,18 +37,18 @@
                 <button class="btn" id="capture-quan"  v-on:click="clickHandler" v-if="auto_captrue_state">停止采集优惠券</button>
                 <button class="btn" id="capture-quan"  v-on:click="clickHandler" v-else>开始采集优惠券</button>
                 <span>
-                采集前<input class="custom-short-input" id="max-quan-page" v-on:keyup="keyupHandler" type="text" v-bind:value="max_quan_page"/>页数据
+                采集最近<input class="custom-short-input" id="max-quan-page" v-on:keyup="keyupHandler" type="text" v-bind:value="max_quan_page"/>页数据
                 </span>
             </dd>
             <dd>
                 <button class="btn" id="auto-send"  v-on:click="clickHandler" v-if="auto_send_state">暂停群发优惠券</button>
                 <button class="btn" id="auto-send"  v-on:click="clickHandler" v-else>开始群发优惠券</button>
                 <span>
-                发送间隔：<input class="custom-short-input" id="auto-send-time-span" v-on:keyup="keyupHandler" type="text" v-bind:value="auto_send_time_span"/>秒
+                发送间隔<input class="custom-short-input" id="auto-send-time-span" v-on:keyup="keyupHandler" type="text" v-bind:value="auto_send_time_span"/>秒
                 </span>
             </dd>
             <dd><button id="btn-logout" v-on:click="clickHandler">注销登录</button></dd>
-            <dt>已采集优惠券数量：{{quan_count}}</dt>
+            <dt><span>已采集{{quan_count}}条优惠券，已群发{{sended_quan_count}}条</span></dt>
         </dl>
 
         <div class="ng-scope">
