@@ -184,25 +184,27 @@ class WxBot extends Wechat {
     let pic = data.Pic;
     let filename = pic.substring(pic.lastIndexOf('/')+1);
     let _ = this;
-    
-    return this.request({method:'get',url:pic,responseType:'blob'}).then(res=>{
-      let blob = res.data;
-      let obj = {
-        file: new File([blob], filename, {type: blob.type, lastModified: new Date().valueOf()}),
-        filename:filename
-      }
-      this.groups.forEach(contact=>{
-        // 判断是否勾选群发
-        if(contact.Checked){
-          this.sendMsg(obj, contact.UserName).then(()=>{
-            let msg_text = `${data.D_title} 【包邮秒杀】\n【在售价】${data.Org_Price}元\n【券后价】${data.Price}元\n【下单链接】${data.QuanLinkUrl}\n-----------\n复制这条信息${data.Token||data.TaoToken}，打开☞手机淘宝☜即可购买！`;
-            return this.sendMsg(msg_text,contact.UserName);
-          }).catch(err => {
-            this.emit('error', err)
-          })
+    // 只发有优惠券商品
+    if(data.CouponLinkTaoToken){
+      return this.request({method:'get',url:pic,responseType:'blob'}).then(res=>{
+        let blob = res.data;
+        let obj = {
+          file: new File([blob], filename, {type: blob.type, lastModified: new Date().valueOf()}),
+          filename:filename
         }
-      });
-    }).catch(err=>{throw err}); 
+        this.groups.forEach(contact=>{
+          // 判断是否勾选群发
+          if(contact.Checked){
+            this.sendMsg(obj, contact.UserName).then(()=>{
+              let msg_text = `${data.D_title} 【包邮秒杀】\n【在售价】${data.Org_Price}元\n【券后价】${data.Price}元\n【下单链接】${data.CouponShortLinkUrl}\n-----------\n复制这条信息${data.CouponLinkTaoToken}，打开☞手机淘宝☜即可购买！`;
+              return this.sendMsg(msg_text,contact.UserName);
+            }).catch(err => {
+              this.emit('error', err)
+            })
+          }
+        });
+      }).catch(err=>{throw err}); 
+    }
   }
   /* 
     @method 开启自动群发优惠券
@@ -210,28 +212,32 @@ class WxBot extends Wechat {
   _startAutoSend(time_span=20){
     var _this = this;
     _this.auto_send = true; 
-
-    let t = setInterval(function(){
+    function send(){
       if(!_this.auto_send){
         clearInterval(t);
         return false;
       }
-      let l = +(localStorage.sended_quan_count||0)+1
+      let low = +(localStorage.sended_quan_count||0)+1
           ,count = 1
-          ,u = l+count
+          ,up = low+count
           ;
 
-      idb.getRangeCursor(CONF.STORE_NAME.TOTAL,l,u).then(cursor=>{
+      idb.getRangeCursor(CONF.STORE_NAME.TOTAL,low,up).then(cursor=>{
         if(cursor){
           let data = cursor.value;
           alimama.getToken(data.GoodsID).then(res=>{
             let d = res.data;
             console.log('获取淘口令',d);
-            let taoToken = d.couponLinkTaoToken||d.taoToken;
-            let linkUrl = d.couponShortLinkUrl||d.shortLinkUrl
-            data.Token = taoToken;
-            data.QuanLinkUrl = linkUrl;
-            return data;
+            if(d.couponLinkTaoToken){
+              data.CouponLinkTaoToken = d.couponLinkTaoToken;
+              data.CouponShortLinkUrl = d.couponShortLinkUrl;
+              return data;
+            }else{
+              let err = {
+                tip:'该商品没有优惠券'
+              }
+              throw err;
+            }
           },reason=>{
             if(confirm('需要登录阿里妈妈才能转换淘口令，是否现在登录?')){
               chrome.tabs.create({
@@ -241,15 +247,20 @@ class WxBot extends Wechat {
             throw  reason;
           }).then(data=>{
             return _this._sendQuanMsg(data).then(()=>{
-              console.log('发送第',u,'条优惠券',new Date());
-              localStorage.sended_quan_count = l;  // 设置已经发送优惠券数量
+              console.log('发送第',up,'条优惠券',new Date());
+              localStorage.sended_quan_count = low;  // 设置已经发送优惠券数量
               return u;
             });
+          },reason=>{
+            console.error(reason);
+            localStorage.sended_quan_count = low;  // 设置已经发送优惠券数量
+            send(); // 发送下一条
           });
           cursor.continue();
         }
       })
-    },1000*time_span);
+    }
+    let t = setInterval(send,1000*time_span);
   }
 
   /* 

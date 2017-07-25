@@ -15,7 +15,7 @@ var $vm = window.$vm = new Vue({
         auto_send_state:false,
         filterName: '',
         max_quan_page:localStorage.max_quan_page||2,    //默认采集前6页数据
-        auto_send_time_span:localStorage.auto_send_time_span||20 //自动发送优惠券间隔,单位秒
+        auto_send_time_span:localStorage.auto_send_time_span||30 //自动发送优惠券间隔,单位秒
     },
     methods: {
         keyupHandler(e){
@@ -24,12 +24,14 @@ var $vm = window.$vm = new Vue({
                 switch(elem.id){
                     case "auto-send-time-span":
                         if(!isNaN(parseInt(elem.value))){
-                            this.auto_send_time_span = localStorage.auto_send_time_span = parseInt(elem.value);
+                            this.auto_send_time_span =  parseInt(elem.value);
+                            localStorage.auto_send_time_span = parseInt(elem.value);
                         }
                     break;
                     case "max-quan-page":
                         if(!isNaN(parseInt(elem.value))){
                             this.max_quan_page = localStorage.max_quan_page = parseInt(elem.value);
+                            localStorage.max_quan_page = parseInt(elem.value);
                         }
                     break;
                 }
@@ -61,7 +63,7 @@ var $vm = window.$vm = new Vue({
                     case "auto-send":
                         if (!bot.auto_send) {
                             console.log('开始群发优惠券')
-                            bot._startAutoSend(this.auto_send_time_span);
+                            bot._startAutoSend(localStorage.auto_send_time_span);
                             elem.innerText = '停止群发优惠券';
                         } else {
                             elem.innerText = '开始群发优惠券';
