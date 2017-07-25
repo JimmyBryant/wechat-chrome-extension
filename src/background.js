@@ -178,7 +178,7 @@ class WxBot extends Wechat {
         // 判断是否勾选群发
         if(contact.Checked){
           this.sendMsg(obj, contact.UserName).then(()=>{
-            let msg_text = `今日推荐：${data.D_title}\n领${data.Quan_price}元独家券，券后【${data.Price}元】包邮秒杀\n查看商品：复制这条信息${data.Token}，打开☞手机淘宝☜即可购买！`;
+            let msg_text = `今日推荐：${data.D_title}\n领${data.Quan_price}元独家券，券后【${data.Price}元】包邮秒杀\n查看商品：复制这条信息${data.Token||data.TaoToken}，打开☞手机淘宝☜即可购买！`;
             return this.sendMsg(msg_text,contact.UserName);
           }).catch(err => {
             this.emit('error', err)
@@ -208,7 +208,7 @@ class WxBot extends Wechat {
         if(cursor){
           let data = cursor.value;
           alimama.getToken(data.GoodsID).then(res=>{
-            let taoToken = res.data.taoToken;
+            let taoToken = res.data.couponLinkTaoToken||res.data.taoToken;
             data.Token = taoToken;
             return data;
           },reason=>{
