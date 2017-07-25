@@ -13915,7 +13915,7 @@ class WxBot extends __WEBPACK_IMPORTED_MODULE_1_wechat4u___default.a {
             return _this._sendQuanMsg(data).then(() => {
               console.log('发送第', up, '条优惠券', new Date());
               localStorage.sended_quan_count = low; // 设置已经发送优惠券数量
-              return u;
+              return up;
             });
           }, reason => {
             console.error(reason);
