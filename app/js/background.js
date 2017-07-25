@@ -13672,8 +13672,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
-let alimama = __webpack_require__(369);
-let idb = __webpack_require__(370);
+let alimama = __webpack_require__(373);
+let idb = __webpack_require__(374);
 
 class WxBot extends __WEBPACK_IMPORTED_MODULE_1_wechat4u___default.a {
 
@@ -13685,22 +13685,7 @@ class WxBot extends __WEBPACK_IMPORTED_MODULE_1_wechat4u___default.a {
     this.ava_contacts = [];
     this.quan_count = 0; //采集优惠券的数量
 
-    // 初始化indexedDB
-    idb.initDb().then(db => {
-      // 获取优惠券数量
-      idb.getCount(idb.STORE_NAME.TOTAL).then(count => {
-        console.debug('获取到优惠券数量:', count);
-        return this.quan_count = count;
-      }, reason => {
-        throw reason;
-      });
-    }).catch(er => {
-      throw err;
-    });
-
-    var auto_msg_timer = null;
-    var localStorage = window.localStorage;
-
+    this.initDB(); //初始化数据库
     this.on('login', () => {
       this.on('message', msg => {
         /**
@@ -13730,6 +13715,45 @@ class WxBot extends __WEBPACK_IMPORTED_MODULE_1_wechat4u___default.a {
     });
   }
 
+  /* 
+    初始化数据库
+    @method
+  */
+  initDB() {
+    const DB_NAME = "wxbot-chrome-extension";
+    const DB_VERSION = this.getDBVersion();
+    // 初始化indexedDB
+    idb.initDb(DB_NAME, DB_VERSION).then(db => {
+      // 获取优惠券数量
+      idb.getCount(idb.STORE_NAME.TOTAL).then(count => {
+        console.debug('获取到优惠券数量:', count);
+        return this.quan_count = count;
+      }, reason => {
+        throw reason;
+      });
+    }).catch(err => {
+      throw err;
+    });
+  }
+  /* 
+    获取数据库版本号
+    @method
+    @return {integer} 数据库版本号
+  */
+  getDBVersion() {
+    let date_str = new Date().toLocaleDateString();
+    if (localStorage.captrue_date != date_str) {
+      let old_version = +(localStorage.db_version || 1);
+      let new_version = old_version + 1;
+      localStorage.captrue_date = date_str;
+      localStorage.db_version = new_version; // 存储db version
+      localStorage.page = 1; //设置开始采集的页数
+      localStorage.sended_quan_count = 1; //设置开始发送优惠券的页数
+      return new_version;
+    } else {
+      return localStorage.db_version;
+    }
+  }
   /*
   * 更新微信群
   */
@@ -13812,23 +13836,37 @@ class WxBot extends __WEBPACK_IMPORTED_MODULE_1_wechat4u___default.a {
   /* 
     @method 开始采集优惠券
   */
-  _startCaptureQuan() {
+  _startCaptureQuan(max_page = 2) {
     let _this = this;
     this.auto_captrue_quan = true;
-    function loop() {
-      _this._requestQuan().then(data => {
-        return _this._storeQuan(data);
-      }, reason => {
-        throw reason;
-      }).then(() => {
-        if (_this.auto_captrue_quan) {
-          loop();
+    return new Promise((resolve, reject) => {
+      function loop() {
+        if (localStorage.page > max_page) {
+          _this._stopCaptureQuan();
+          resolve(max_page);
         }
-      }, reason => {
-        throw reason;
-      });
-    }
-    loop();
+        _this._requestQuan().then(data => {
+          return _this._storeQuan(data);
+        }, reason => {
+          throw reason;
+        }).then(() => {
+          if (_this.auto_captrue_quan) {
+            loop();
+          }
+        }, reason => {
+          throw reason;
+        });
+      }
+      loop();
+    });
+  }
+
+  /* 
+    暂停采集优惠券
+    @method
+  */
+  _stopCaptureQuan() {
+    this.auto_captrue_quan = false;
   }
   /* 
     @method 发送优惠券消息
@@ -13848,7 +13886,7 @@ class WxBot extends __WEBPACK_IMPORTED_MODULE_1_wechat4u___default.a {
         // 判断是否勾选群发
         if (contact.Checked) {
           this.sendMsg(obj, contact.UserName).then(() => {
-            let msg_text = `今日推荐：${data.D_title}\n领${data.Quan_price}元独家券，券后【${data.Price}元】包邮秒杀\n查看商品：复制这条信息${data.Token || data.TaoToken}，打开☞手机淘宝☜即可购买！`;
+            let msg_text = `${data.D_title} 【包邮秒杀】\n【在售价】${data.Org_Price}元\n【券后价】${data.Price}元\n【下单链接】${data.QuanLinkUrl}\n-----------\n复制这条信息${data.Token || data.TaoToken}，打开☞手机淘宝☜即可购买！`;
             return this.sendMsg(msg_text, contact.UserName);
           }).catch(err => {
             this.emit('error', err);
@@ -13879,8 +13917,12 @@ class WxBot extends __WEBPACK_IMPORTED_MODULE_1_wechat4u___default.a {
         if (cursor) {
           let data = cursor.value;
           alimama.getToken(data.GoodsID).then(res => {
-            let taoToken = res.data.couponLinkTaoToken || res.data.taoToken;
+            let d = res.data;
+            console.log('获取淘口令', d);
+            let taoToken = d.couponLinkTaoToken || d.taoToken;
+            let linkUrl = d.couponShortLinkUrl || d.shortLinkUrl;
             data.Token = taoToken;
+            data.QuanLinkUrl = linkUrl;
             return data;
           }, reason => {
             if (confirm('需要登录阿里妈妈才能转换淘口令，是否现在登录?')) {
@@ -40107,7 +40149,11 @@ function MessageFactory(instance) {
 //# sourceMappingURL=message.js.map
 
 /***/ }),
-/* 369 */
+/* 369 */,
+/* 370 */,
+/* 371 */,
+/* 372 */,
+/* 373 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -40168,41 +40214,49 @@ let alimama = {
 exports = module.exports = alimama;
 
 /***/ }),
-/* 370 */
+/* 374 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(console) {
 
 var indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
-const DB_NAME = "wxbot-chrome-extension";
-// const DB_NAME = "fffff";
-const DB_VERSION = 1;
-const DB_STORE_NAME = {
-    TOTAL: 'quan_total'
+const STORE_NAME = {
+    TOTAL: 'quan_total',
+    TOP100: 'top100'
 };
 let db = null;
 let idb = {
-    STORE_NAME: DB_STORE_NAME,
+    STORE_NAME: STORE_NAME,
     /* 
     *   创建存储空间
+    *   @param {String} name 数据库名称
+    *   @param {Integer} version 数据库版本
     */
-    initDb() {
+    initDb(name, version) {
         return new Promise((resolve, reject) => {
-            var req = indexedDB.open(DB_NAME, DB_VERSION);
+            var req = indexedDB.open(name, version);
+            console.debug('dbversion:', version);
             req.onsuccess = function (event) {
                 db = event.target.result;
                 resolve(db);
             };
             req.onerror = function (event) {
-                console.error("initDb:", event.target.errorCode);
-                reject(event.target.errorCode);
+                console.error("initDb:", event.target.error);
+                reject(event.target.error);
             };
 
             req.onupgradeneeded = function (event) {
                 console.debug("initDb.onupgradeneeded");
                 var db = event.target.result;
-                var objectStore = db.createObjectStore(DB_STORE_NAME.TOTAL, { autoIncrement: true });
+                if (db.objectStoreNames.contains(STORE_NAME.TOTAL)) {
+                    db.deleteObjectStore(STORE_NAME.TOTAL);
+                }
+                if (db.objectStoreNames.contains(STORE_NAME.TOP100)) {
+                    db.deleteObjectStore(STORE_NAME.TOP100);
+                }
+                db.createObjectStore(STORE_NAME.TOTAL, { autoIncrement: true });
+                db.createObjectStore(STORE_NAME.TOP100, { autoIncrement: true });
             };
         });
     },
@@ -40248,8 +40302,25 @@ let idb = {
                 resolve(countRequest.result);
             };
             countRequest.onerror = function (event) {
-                console.error("initDb:", event.target.errorCode);
-                reject(event.target.errorCode);
+                console.error("initDb:", event.target.error);
+                reject(event.target.error);
+            };
+        });
+    },
+    /* 清除storeObject所有
+        @method
+        @param {String} name objectStore的名称
+    */
+    clear(name) {
+        return new Promise((resolve, reject) => {
+            let objectStore = db.transaction(name, 'readwrite').objectStore(name);
+            let request = objectStore.clear();
+            request.onsuccess = function () {
+                resolve(request.result);
+            };
+            request.onerror = function (event) {
+                console.error("clear objectStore:", event.target.error);
+                reject(event.target.error);
             };
         });
     },

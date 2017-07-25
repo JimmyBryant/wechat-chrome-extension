@@ -1,8 +1,8 @@
 'use strict';
 import "babel-polyfill";
 import Wechat from 'wechat4u';
-let alimama  = require('./alimama');
-let idb = require('./idb');
+let alimama  = require('./util/alimama');
+let idb = require('./util/idb');
 
 class WxBot extends Wechat {
  
@@ -14,23 +14,7 @@ class WxBot extends Wechat {
     this.ava_contacts = [];
     this.quan_count = 0; //采集优惠券的数量
 
-    // 初始化indexedDB
-    idb.initDb()
-    .then(db=>{
-      // 获取优惠券数量
-      idb.getCount(idb.STORE_NAME.TOTAL).then(count=>{
-        console.debug('获取到优惠券数量:',count)
-        return this.quan_count = count;
-      },reason=>{
-        throw reason;
-      })
-    }).catch(er=>{
-      throw err;
-    });
-
-    var auto_msg_timer = null;
-    var localStorage = window.localStorage;
-
+    this.initDB();  //初始化数据库
     this.on('login',()=>{
         this.on('message',msg=>{
         /**
@@ -60,6 +44,46 @@ class WxBot extends Wechat {
     });
   }
 
+  /* 
+    初始化数据库
+    @method
+  */
+  initDB(){
+    const DB_NAME = "wxbot-chrome-extension";
+    const DB_VERSION = this.getDBVersion();
+    // 初始化indexedDB
+    idb.initDb(DB_NAME,DB_VERSION)
+    .then(db=>{
+      // 获取优惠券数量
+      idb.getCount(idb.STORE_NAME.TOTAL).then(count=>{
+        console.debug('获取到优惠券数量:',count)
+        return this.quan_count = count;
+      },reason=>{
+        throw reason;
+      })
+    }).catch(err=>{
+      throw err;
+    });
+  }
+  /* 
+    获取数据库版本号
+    @method
+    @return {integer} 数据库版本号
+  */
+  getDBVersion(){
+    let date_str = new Date().toLocaleDateString();
+    if(localStorage.captrue_date!=date_str){
+      let old_version = +(localStorage.db_version||1);
+      let new_version = old_version+1;
+      localStorage.captrue_date = date_str;
+      localStorage.db_version = new_version; // 存储db version
+      localStorage.page = 1;  //设置开始采集的页数
+      localStorage.sended_quan_count = 1; //设置开始发送优惠券的页数
+      return new_version;
+    }else{
+      return localStorage.db_version;
+    }
+  }
   /*
   * 更新微信群
   */
@@ -142,23 +166,39 @@ class WxBot extends Wechat {
   /* 
     @method 开始采集优惠券
   */
-  _startCaptureQuan(){
+  _startCaptureQuan(max_page=2){
     let _this = this;
     this.auto_captrue_quan = true;
-    function loop(){
-      _this._requestQuan().then(data=>{
-          return _this._storeQuan(data)
+    return new Promise((resolve,reject)=>{
+      function loop(){
+        if(localStorage.page>max_page){
+          _this._stopCaptureQuan();
+          resolve(max_page)
+        }
+        _this._requestQuan().then(data=>{
+            return _this._storeQuan(data)
+          },reason=>{
+            throw reason;
+          }).then(()=>{
+          if(_this.auto_captrue_quan){
+            loop();
+          }
         },reason=>{
           throw reason;
-        }).then(()=>{
-        if(_this.auto_captrue_quan){
-          loop();
-        }
-      },reason=>{
-        throw reason;
-      })
-    }
-    loop();
+        })
+      }
+      loop();
+    })
+
+    
+  }
+
+  /* 
+    暂停采集优惠券
+    @method
+  */
+  _stopCaptureQuan(){
+    this.auto_captrue_quan = false;
   }
   /* 
     @method 发送优惠券消息
@@ -178,7 +218,7 @@ class WxBot extends Wechat {
         // 判断是否勾选群发
         if(contact.Checked){
           this.sendMsg(obj, contact.UserName).then(()=>{
-            let msg_text = `今日推荐：${data.D_title}\n领${data.Quan_price}元独家券，券后【${data.Price}元】包邮秒杀\n查看商品：复制这条信息${data.Token||data.TaoToken}，打开☞手机淘宝☜即可购买！`;
+            let msg_text = `${data.D_title} 【包邮秒杀】\n【在售价】${data.Org_Price}元\n【券后价】${data.Price}元\n【下单链接】${data.QuanLinkUrl}\n-----------\n复制这条信息${data.Token||data.TaoToken}，打开☞手机淘宝☜即可购买！`;
             return this.sendMsg(msg_text,contact.UserName);
           }).catch(err => {
             this.emit('error', err)
@@ -208,8 +248,12 @@ class WxBot extends Wechat {
         if(cursor){
           let data = cursor.value;
           alimama.getToken(data.GoodsID).then(res=>{
-            let taoToken = res.data.couponLinkTaoToken||res.data.taoToken;
+            let d = res.data;
+            console.log('获取淘口令',d);
+            let taoToken = d.couponLinkTaoToken||d.taoToken;
+            let linkUrl = d.couponShortLinkUrl||d.shortLinkUrl
             data.Token = taoToken;
+            data.QuanLinkUrl = linkUrl;
             return data;
           },reason=>{
             if(confirm('需要登录阿里妈妈才能转换淘口令，是否现在登录?')){

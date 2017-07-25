@@ -1,33 +1,41 @@
 'use strict';
 var indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
-const DB_NAME = "wxbot-chrome-extension";
-// const DB_NAME = "fffff";
-const DB_VERSION = 1;
-const DB_STORE_NAME = {
-    TOTAL:'quan_total'
+const STORE_NAME = {
+    TOTAL:'quan_total',
+    TOP100:'top100'
 };
 let db = null;
 let idb = {
-    STORE_NAME:DB_STORE_NAME,
+    STORE_NAME:STORE_NAME,
     /* 
     *   创建存储空间
+    *   @param {String} name 数据库名称
+    *   @param {Integer} version 数据库版本
     */
-    initDb() {
+    initDb(name,version) {
         return new Promise((resolve,reject)=>{
-            var req = indexedDB.open(DB_NAME, DB_VERSION);
+            var req = indexedDB.open(name, version);
+            console.debug('dbversion:',version);
             req.onsuccess = function (event) {
                 db = event.target.result;
                 resolve(db);
             };
             req.onerror = function (event) {
-                console.error("initDb:", event.target.errorCode);
-                reject(event.target.errorCode);
+                console.error("initDb:", event.target.error );
+                reject(event.target.error );
             };
 
             req.onupgradeneeded = function (event) {
                 console.debug("initDb.onupgradeneeded");
                 var db = event.target.result;
-                var objectStore = db.createObjectStore(DB_STORE_NAME.TOTAL, {autoIncrement: true });
+                if(db.objectStoreNames.contains(STORE_NAME.TOTAL)){
+                    db.deleteObjectStore(STORE_NAME.TOTAL)
+                }
+                if(db.objectStoreNames.contains(STORE_NAME.TOP100)){
+                    db.deleteObjectStore(STORE_NAME.TOP100)
+                }
+                db.createObjectStore(STORE_NAME.TOTAL, {autoIncrement: true });
+                db.createObjectStore(STORE_NAME.TOP100, {autoIncrement: true });
             };
         })
     },
@@ -73,8 +81,25 @@ let idb = {
                 resolve(countRequest.result);
             }
             countRequest.onerror = function (event) {
-                console.error("initDb:", event.target.errorCode);
-                reject(event.target.errorCode);
+                console.error("initDb:", event.target.error );
+                reject(event.target.error );
+            };
+        })
+    },
+    /* 清除storeObject所有
+        @method
+        @param {String} name objectStore的名称
+    */
+    clear(name){
+        return new Promise((resolve,reject)=>{
+            let objectStore = db.transaction(name, 'readwrite') .objectStore(name);
+            let request = objectStore.clear();
+            request.onsuccess = function() {
+                resolve(request.result);
+            }
+            request.onerror = function (event) {
+                console.error("clear objectStore:", event.target.error );
+                reject(event.target.error );
             };
         })
     },
