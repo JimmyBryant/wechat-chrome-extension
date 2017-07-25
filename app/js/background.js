@@ -13674,6 +13674,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 let alimama = __webpack_require__(373);
 let idb = __webpack_require__(374);
+let CONF = __webpack_require__(375);
+let taoQuan = __webpack_require__(376);
 
 class WxBot extends __WEBPACK_IMPORTED_MODULE_1_wechat4u___default.a {
 
@@ -13725,7 +13727,7 @@ class WxBot extends __WEBPACK_IMPORTED_MODULE_1_wechat4u___default.a {
     // 初始化indexedDB
     idb.initDb(DB_NAME, DB_VERSION).then(db => {
       // 获取优惠券数量
-      idb.getCount(idb.STORE_NAME.TOTAL).then(count => {
+      idb.getCount(CONF.STORE_NAME.TOTAL).then(count => {
         console.debug('获取到优惠券数量:', count);
         return this.quan_count = count;
       }, reason => {
@@ -13797,42 +13799,6 @@ class WxBot extends __WEBPACK_IMPORTED_MODULE_1_wechat4u___default.a {
     };
   }
 
-  _requestQuan() {
-    let page = localStorage.quan_page || 1;
-    let params = {
-      'r': 'Port/index',
-      'type': 'total',
-      'v': 2,
-      'page': page,
-      'appkey': '8ven3b83so'
-    };
-    return this.request({
-      method: 'GET',
-      url: 'http://api.dataoke.com/index.php',
-      params: params
-    }).then(res => {
-      let data = res.data;
-      localStorage.quan_page = ++page;
-      return data.result;
-    }).catch(err => {
-      console.log(err);
-      throw '大淘客api请求出错';
-    });
-  }
-
-  /* 
-  * @method
-  * @param {Array<Objet>} data  优惠券信息，JSON数组
-  * @return Promise
-  */
-  _storeQuan(data) {
-    return idb.addItems(idb.STORE_NAME.TOTAL, data).then(() => {
-      return idb.getCount(idb.STORE_NAME.TOTAL).then(count => {
-        return this.quan_count = count;
-      });
-    });
-  }
-
   /* 
     @method 开始采集优惠券
   */
@@ -13846,8 +13812,8 @@ class WxBot extends __WEBPACK_IMPORTED_MODULE_1_wechat4u___default.a {
           resolve(max_page);
           return false;
         }
-        _this._requestQuan().then(data => {
-          return _this._storeQuan(data);
+        taoQuan.requestTotal().then(data => {
+          return taoQuan.storeQuan(CONF.STORE_NAME.TOTAL, data);
         }, reason => {
           throw reason;
         }).then(() => {
@@ -13914,7 +13880,7 @@ class WxBot extends __WEBPACK_IMPORTED_MODULE_1_wechat4u___default.a {
           count = 1,
           u = l + count;
 
-      idb.getRangeCursor(idb.STORE_NAME.TOTAL, l, u).then(cursor => {
+      idb.getRangeCursor(CONF.STORE_NAME.TOTAL, l, u).then(cursor => {
         if (cursor) {
           let data = cursor.value;
           alimama.getToken(data.GoodsID).then(res => {
@@ -40221,14 +40187,11 @@ exports = module.exports = alimama;
 "use strict";
 /* WEBPACK VAR INJECTION */(function(console) {
 
+let CONF = __webpack_require__(375);
 var indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
-const STORE_NAME = {
-    TOTAL: 'quan_total',
-    TOP100: 'top100'
-};
+const STORE_NAME = CONF.STORE_NAME;
 let db = null;
 let idb = {
-    STORE_NAME: STORE_NAME,
     /* 
     *   创建存储空间
     *   @param {String} name 数据库名称
@@ -40250,14 +40213,12 @@ let idb = {
             req.onupgradeneeded = function (event) {
                 console.debug("initDb.onupgradeneeded");
                 var db = event.target.result;
-                if (db.objectStoreNames.contains(STORE_NAME.TOTAL)) {
-                    db.deleteObjectStore(STORE_NAME.TOTAL);
+                for (let name in STORE_NAME) {
+                    if (db.objectStoreNames.contains(STORE_NAME[name])) {
+                        db.deleteObjectStore(STORE_NAME[name]);
+                    }
+                    db.createObjectStore(STORE_NAME[name], { autoIncrement: true });
                 }
-                if (db.objectStoreNames.contains(STORE_NAME.TOP100)) {
-                    db.deleteObjectStore(STORE_NAME.TOP100);
-                }
-                db.createObjectStore(STORE_NAME.TOTAL, { autoIncrement: true });
-                db.createObjectStore(STORE_NAME.TOP100, { autoIncrement: true });
             };
         });
     },
@@ -40298,11 +40259,11 @@ let idb = {
     getCount(name) {
         return new Promise((resolve, reject) => {
             let objectStore = db.transaction(name, 'readwrite').objectStore(name);
-            var countRequest = objectStore.count();
-            countRequest.onsuccess = function () {
-                resolve(countRequest.result);
+            var request = objectStore.count();
+            request.onsuccess = function () {
+                resolve(request.result);
             };
-            countRequest.onerror = function (event) {
+            request.onerror = function (event) {
                 console.error("initDb:", event.target.error);
                 reject(event.target.error);
             };
@@ -40345,6 +40306,94 @@ let idb = {
 };
 
 exports = module.exports = idb;
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(41)))
+
+/***/ }),
+/* 375 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports = module.exports = {
+    STORE_NAME: {
+        TOTAL: 'quan_total',
+        TOP100: 'quan_top100',
+        PAOLIANG: 'quan_paoliang'
+    }
+};
+
+/***/ }),
+/* 376 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(console) {
+
+let CONF = __webpack_require__(375);
+let idb = __webpack_require__(374);
+let axios = __webpack_require__(319);
+
+let taoQuan = {
+    requestTop100() {
+        let params = {
+            'r': 'Port/index',
+            'type': 'top100',
+            'v': 2,
+            'appkey': '8ven3b83so'
+        };
+        return axios.request({
+            method: 'GET',
+            url: 'http://api.dataoke.com/index.php',
+            params: params
+        }).then(res => {
+            let data = res.data;
+            return data.result;
+        }).catch(err => {
+            throw '大淘客api请求出错';
+        });
+    },
+    requestTotal() {
+        console.debug('采集所有优惠券');
+        let page = localStorage.quan_page || 1;
+        let params = {
+            'r': 'Port/index',
+            'type': 'total',
+            'v': 2,
+            'page': page,
+            'appkey': '8ven3b83so'
+        };
+        return axios.request({
+            method: 'GET',
+            url: 'http://api.dataoke.com/index.php',
+            params: params
+        }).then(res => {
+            let data = res.data;
+            localStorage.quan_page = ++page;
+            return data.result;
+        }).catch(err => {
+            throw err;
+        });
+    },
+    requestPaoliang() {},
+    /* 
+    * @method
+    * @param {String} name storeObject名称
+    * @param {Array<Objet>} data  优惠券信息，JSON数组
+    * @return Promise
+    */
+    storeQuan(name, data) {
+        return idb.addItems(name, data).then(() => {
+            return idb.getCount(name).then(count => {
+                return this.quan_count = count;
+            });
+        }).catch(err => {
+            throw err;
+        });
+    }
+};
+
+exports = module.exports = taoQuan;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(41)))
 
 /***/ })

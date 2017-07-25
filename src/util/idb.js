@@ -1,12 +1,9 @@
 'use strict';
+let CONF = require('./conf')
 var indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
-const STORE_NAME = {
-    TOTAL:'quan_total',
-    TOP100:'top100'
-};
+const STORE_NAME = CONF.STORE_NAME;
 let db = null;
 let idb = {
-    STORE_NAME:STORE_NAME,
     /* 
     *   创建存储空间
     *   @param {String} name 数据库名称
@@ -28,14 +25,12 @@ let idb = {
             req.onupgradeneeded = function (event) {
                 console.debug("initDb.onupgradeneeded");
                 var db = event.target.result;
-                if(db.objectStoreNames.contains(STORE_NAME.TOTAL)){
-                    db.deleteObjectStore(STORE_NAME.TOTAL)
+                for(let name in STORE_NAME){
+                    if(db.objectStoreNames.contains(STORE_NAME[name])){
+                        db.deleteObjectStore(STORE_NAME[name])
+                    }
+                    db.createObjectStore(STORE_NAME[name], {autoIncrement: true });
                 }
-                if(db.objectStoreNames.contains(STORE_NAME.TOP100)){
-                    db.deleteObjectStore(STORE_NAME.TOP100)
-                }
-                db.createObjectStore(STORE_NAME.TOTAL, {autoIncrement: true });
-                db.createObjectStore(STORE_NAME.TOP100, {autoIncrement: true });
             };
         })
     },
@@ -76,11 +71,11 @@ let idb = {
     getCount(name){
         return new Promise((resolve,reject)=>{
             let objectStore = db.transaction(name, 'readwrite') .objectStore(name);
-            var countRequest = objectStore.count();
-            countRequest.onsuccess = function() {
-                resolve(countRequest.result);
+            var request = objectStore.count();
+            request.onsuccess = function() {
+                resolve(request.result);
             }
-            countRequest.onerror = function (event) {
+            request.onerror = function (event) {
                 console.error("initDb:", event.target.error );
                 reject(event.target.error );
             };

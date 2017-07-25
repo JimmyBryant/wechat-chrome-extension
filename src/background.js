@@ -3,6 +3,8 @@ import "babel-polyfill";
 import Wechat from 'wechat4u';
 let alimama  = require('./util/alimama');
 let idb = require('./util/idb');
+let CONF = require('./util/conf');
+let taoQuan = require('./util/quan');
 
 class WxBot extends Wechat {
  
@@ -55,7 +57,7 @@ class WxBot extends Wechat {
     idb.initDb(DB_NAME,DB_VERSION)
     .then(db=>{
       // 获取优惠券数量
-      idb.getCount(idb.STORE_NAME.TOTAL).then(count=>{
+      idb.getCount(CONF.STORE_NAME.TOTAL).then(count=>{
         console.debug('获取到优惠券数量:',count)
         return this.quan_count = count;
       },reason=>{
@@ -127,42 +129,6 @@ class WxBot extends Wechat {
     };  
   }
 
-  _requestQuan(){
-    let page = localStorage.quan_page||1;
-    let params = {
-      'r': 'Port/index',
-      'type': 'total',
-      'v':2,
-      'page':page,
-      'appkey':'8ven3b83so'
-    };
-    return this.request({
-      method: 'GET',
-      url: 'http://api.dataoke.com/index.php',
-      params: params      
-    }).then(res=>{
-      let data = res.data;
-      localStorage.quan_page = ++page;
-      return  data.result;
-    }).catch(err=>{
-      console.log(err);
-      throw '大淘客api请求出错';
-    });
-  }
-
-  /* 
-  * @method
-  * @param {Array<Objet>} data  优惠券信息，JSON数组
-  * @return Promise
-  */
-  _storeQuan(data){
-    return idb.addItems(idb.STORE_NAME.TOTAL,data).then(()=>{
-       return idb.getCount(idb.STORE_NAME.TOTAL).then(count=>{
-        return this.quan_count = count;
-       })
-    });
-  }
-
   /* 
     @method 开始采集优惠券
   */
@@ -176,22 +142,20 @@ class WxBot extends Wechat {
           resolve(max_page);
           return false;
         }
-        _this._requestQuan().then(data=>{
-            return _this._storeQuan(data)
-          },reason=>{
-            throw reason;
-          }).then(()=>{
+        taoQuan.requestTotal().then(data=>{
+          return taoQuan.storeQuan(CONF.STORE_NAME.TOTAL,data)
+        },reason=>{
+          throw reason;
+        }).then(()=>{
           if(_this.auto_captrue_quan){
             loop();
           }
         },reason=>{
           throw reason;
-        })
+        });
       }
       loop();
-    })
-
-    
+    });
   }
 
   /* 
@@ -245,7 +209,7 @@ class WxBot extends Wechat {
           ,u = l+count
           ;
 
-      idb.getRangeCursor(idb.STORE_NAME.TOTAL,l,u).then(cursor=>{
+      idb.getRangeCursor(CONF.STORE_NAME.TOTAL,l,u).then(cursor=>{
         if(cursor){
           let data = cursor.value;
           alimama.getToken(data.GoodsID).then(res=>{
