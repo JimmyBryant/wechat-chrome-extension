@@ -303,6 +303,9 @@ if(!localStorage.auto_send_time_span){
 if(!localStorage.sended_quan_count){  // 已经发送条数默认为0
   localStorage.sended_quan_count=0;
 }
+if(!localStorage.alimama_session_activetime){ //设置最近更新alimama session时间
+  localStorage.alimama_session_activetime = Date.now();
+}
 
 window.getBot = () => {
   let prop = null;

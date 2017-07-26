@@ -14117,6 +14117,10 @@ if (!localStorage.sended_quan_count) {
   // 已经发送条数默认为0
   localStorage.sended_quan_count = 0;
 }
+if (!localStorage.alimama_session_activetime) {
+  //设置最近更新alimama session时间
+  localStorage.alimama_session_activetime = Date.now();
+}
 
 window.getBot = () => {
   let prop = null;
@@ -40319,19 +40323,30 @@ let alimama = {
         let params = {};
     },
     /* 
-        维持阿里妈妈session登录状态
+        刷新阿里妈妈登录session
     */
-    refreshSesson() {
-        function refresh() {
-            axios.get('https://anyservice.taobao.com/window/getAnywhereContent.do?anyconditions=%7B%22isInit%22%3Atrue%7D&from=anywhere&sourceId=434&sourceUrl=https%3A%2F%2Fwww.alimama.com%2Findex.htm&bizCode=PCMaMaAnyWhereWindow&callback=anywhere_jsonp_getAnywhereContent&_input_charset=UTF-8').then(res => {
-                return axios.get('https://anyhelp.taobao.com/window/getUserStateInfo.do?target=1&from=anywhere&sourceId=434&sourceUrl=https%3A%2F%2Fwww.alimama.com%2Findex.htm&requestId=&bizCode=PCMaMaAnyWhereWindow&callback=anywhere_jsonp_2&_input_charset=UTF-8');
-            }).then(res => {
-                localStorage.alimama_session_activetime = Date.now();
-                console.debug('更新alimama session', res.data);
-                // 20分钟更新一次session
-                setTimeout(refresh, 10 * 60 * 1000);
-            });
-        }
+    refreshSession() {
+        axios.get('https://anyservice.taobao.com/window/getAnywhereContent.do?anyconditions=%7B%22isInit%22%3Atrue%7D&from=anywhere&sourceId=434&sourceUrl=https%3A%2F%2Fwww.alimama.com%2Findex.htm&bizCode=PCMaMaAnyWhereWindow&callback=anywhere_jsonp_getAnywhereContent&_input_charset=UTF-8').then(res => {
+            return axios.get('https://anyhelp.taobao.com/window/getUserStateInfo.do?target=1&from=anywhere&sourceId=434&sourceUrl=https%3A%2F%2Fwww.alimama.com%2Findex.htm&requestId=&bizCode=PCMaMaAnyWhereWindow&callback=anywhere_jsonp_2&_input_charset=UTF-8');
+        }, reason => {
+            throw reason;
+        }).then(res => {
+            localStorage.alimama_session_activetime = Date.now();
+            console.debug('更新alimama session', res.data);
+        }).catch(err => {
+            throw err;
+        });
+
+        /*         return new Promise((resolve,reject)=>{
+                    chrome.tabs.create({
+                        url:'http://pub.alimama.com/myunion.htm',selected:false
+                    },function(tab){
+                        setTimeout(function(){
+                            chrome.tabs.remove(tab.id);
+                            resolve(tab.id);
+                        },10*1000)
+                    })
+                }); */
     },
     /* 
         @param {Integer} id  商品id
@@ -40372,8 +40387,8 @@ let alimama = {
                     throw err;
                 }
                 // 定时更新session
-                if (!localStorage.alimama_session_activetime) {
-                    alimama.refreshSesson();
+                if (Date.now() - parseInt(localStorage.alimama_session_activetime) > 2 * 60 * 1000) {
+                    alimama.refreshSession();
                 }
                 return res.data;
             }).catch(err => {
