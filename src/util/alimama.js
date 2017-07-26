@@ -19,7 +19,7 @@ let alimama = {
         刷新阿里妈妈登录session
     */
     refreshSession(){
-        axios.get('https://anyservice.taobao.com/window/getAnywhereContent.do?anyconditions=%7B%22isInit%22%3Atrue%7D&from=anywhere&sourceId=434&sourceUrl=https%3A%2F%2Fwww.alimama.com%2Findex.htm&bizCode=PCMaMaAnyWhereWindow&callback=anywhere_jsonp_getAnywhereContent&_input_charset=UTF-8').then(res=>{
+/*         axios.get('https://anyservice.taobao.com/window/getAnywhereContent.do?anyconditions=%7B%22isInit%22%3Atrue%7D&from=anywhere&sourceId=434&sourceUrl=https%3A%2F%2Fwww.alimama.com%2Findex.htm&bizCode=PCMaMaAnyWhereWindow&callback=anywhere_jsonp_getAnywhereContent&_input_charset=UTF-8').then(res=>{
         return axios.get('https://anyhelp.taobao.com/window/getUserStateInfo.do?target=1&from=anywhere&sourceId=434&sourceUrl=https%3A%2F%2Fwww.alimama.com%2Findex.htm&requestId=&bizCode=PCMaMaAnyWhereWindow&callback=anywhere_jsonp_2&_input_charset=UTF-8')
         },reason=>{
             throw reason;
@@ -28,18 +28,17 @@ let alimama = {
             console.debug('更新alimama session',res.data);
         }).catch(err=>{
             throw err;
-        })
+        }) */
         
-/*         return new Promise((resolve,reject)=>{
-            chrome.tabs.create({
-                url:'http://pub.alimama.com/myunion.htm',selected:false
-            },function(tab){
-                setTimeout(function(){
-                    chrome.tabs.remove(tab.id);
-                    resolve(tab.id);
-                },10*1000)
-            })
-        }); */
+        chrome.tabs.create({
+            url:'http://pub.alimama.com/myunion.htm'
+        },function(tab){
+            localStorage.alimama_session_activetime = Date.now();
+            setTimeout(function(){
+                console.debug('刷新阿里妈妈session',new Date());
+                chrome.tabs.remove(tab.id);
+            },10*1000)
+        })
     },
     /* 
         @param {Integer} id  商品id
@@ -67,7 +66,6 @@ let alimama = {
                 scenes:1,
                 t:Date.now(),
                 _tb_token_:cookie.value
-
             };
             return axios.request({
                 url:url,
@@ -79,8 +77,9 @@ let alimama = {
                     let err = {tip:'还未登录阿里妈妈'}
                     throw err;
                 }
-                // 定时更新session
-                if(Date.now()-parseInt(localStorage.alimama_session_activetime)>2*60*1000){
+                // 定时更新session 暂定为5分钟
+                if(Date.now()-parseInt(localStorage.alimama_session_activetime)>5*60*1000){
+                    console.debug('定时5分钟刷新阿里妈妈session',new Date());
                     alimama.refreshSession();
                 }
                 return res.data;
