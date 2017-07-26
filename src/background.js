@@ -210,6 +210,7 @@ class WxBot extends Wechat {
     @method 开启自动群发优惠券
   */
   _startAutoSend(time_span=20){
+    console.debug('发送时间间隔',time_span)
     var _this = this;
     _this.auto_send = true; 
     let t = setInterval(send,1000*time_span);
@@ -222,7 +223,7 @@ class WxBot extends Wechat {
       let low = +(localStorage.sended_quan_count||0)+1
           ,up = low+1
           ;
-
+      console.debug('发送第',low,'条优惠券')
       idb.getRangeCursor(CONF.STORE_NAME.TOTAL,low,up).then(cursor=>{
         if(cursor){
           let data = cursor.value;

@@ -26,6 +26,9 @@ var $vm = window.$vm = new Vue({
             if(bot.auto_send){
                 this.auto_send_text = '暂停群发优惠券'
             }
+            if(!localStorage.auto_send_time_span){
+                localStorage.auto_send_time_span = 20;
+            }
             this.quan_count = bot.quan_count;   // 更新优惠券数量
         },
         keyupHandler(e){
@@ -34,11 +37,13 @@ var $vm = window.$vm = new Vue({
                 switch(elem.id){
                     case "auto-send-time-span":
                         if(!isNaN(parseInt(elem.value))){
+                            this.auto_send_time_span = parseInt(elem.value);
                             localStorage.auto_send_time_span = parseInt(elem.value);
                         }
                     break;
                     case "max-quan-page":
                         if(!isNaN(parseInt(elem.value))){
+                            this.max_quan_page = ge = parseInt(elem.value);
                             localStorage.max_quan_page = parseInt(elem.value);
                         }
                     break;
@@ -51,7 +56,7 @@ var $vm = window.$vm = new Vue({
                 switch (elem.id) {
                     case "capture-quan":
                         if (!bot.auto_captrue_quan) {
-                            bot._startCaptureQuan(localStorage.max_quan_page)
+                            bot._startCaptureQuan(this.max_quan_page)
                             .then(p=>{
                                 this.capture_quan_text = '开始采集优惠券';
                                 var notification = new Notification('优惠券抓取成功', {
@@ -68,7 +73,8 @@ var $vm = window.$vm = new Vue({
                     break;
                     case "auto-send":
                         if (!bot.auto_send) {
-                            bot._startAutoSend(localStorage.auto_send_time_span);
+                            console.log('间隔',localStorage.auto_send_time_span,'秒')
+                            bot._startAutoSend(this.auto_send_time_span);
                             this.auto_send_text = '停止群发优惠券';
                         } else {
                             this.auto_send_text = '开始群发优惠券';
