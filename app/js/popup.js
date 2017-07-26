@@ -9701,9 +9701,9 @@ var $vm = window.$vm = new __WEBPACK_IMPORTED_MODULE_1_vue___default.a({
         groups: [],
         quan_count: 0,
         filterName: '',
-        sended_quan_count: localStorage.sended_quan_count || 0,
-        max_quan_page: localStorage.max_quan_page || 2, //默认采集前6页数据
-        auto_send_time_span: localStorage.auto_send_time_span || 30 //自动发送优惠券间隔,单位秒
+        sended_quan_count: localStorage.sended_quan_count,
+        max_quan_page: localStorage.max_quan_page,
+        auto_send_time_span: localStorage.auto_send_time_span
     },
     methods: {
         initData() {
@@ -9713,9 +9713,6 @@ var $vm = window.$vm = new __WEBPACK_IMPORTED_MODULE_1_vue___default.a({
             if (bot.auto_send) {
                 this.auto_send_text = '暂停群发优惠券';
             }
-            if (!localStorage.auto_send_time_span) {
-                localStorage.auto_send_time_span = 20;
-            }
             this.quan_count = bot.quan_count; // 更新优惠券数量
         },
         keyupHandler(e) {
@@ -9724,14 +9721,14 @@ var $vm = window.$vm = new __WEBPACK_IMPORTED_MODULE_1_vue___default.a({
                 switch (elem.id) {
                     case "auto-send-time-span":
                         if (!isNaN(parseInt(elem.value))) {
-                            this.auto_send_time_span = parseInt(elem.value);
                             localStorage.auto_send_time_span = parseInt(elem.value);
+                            this.auto_send_time_span = localStorage.auto_send_time_span;
                         }
                         break;
                     case "max-quan-page":
                         if (!isNaN(parseInt(elem.value))) {
-                            this.max_quan_page = ge = parseInt(elem.value);
                             localStorage.max_quan_page = parseInt(elem.value);
+                            this.max_quan_page = localStorage.max_quan_page;
                         }
                         break;
                 }
@@ -9743,7 +9740,7 @@ var $vm = window.$vm = new __WEBPACK_IMPORTED_MODULE_1_vue___default.a({
                 switch (elem.id) {
                     case "capture-quan":
                         if (!bot.auto_captrue_quan) {
-                            bot._startCaptureQuan(this.max_quan_page).then(p => {
+                            bot._startCaptureQuan(localStorage.max_quan_page).then(p => {
                                 this.capture_quan_text = '开始采集优惠券';
                                 var notification = new Notification('优惠券抓取成功', {
                                     body: "已经成功抓取了前" + p + "页的优惠券数据"
@@ -9759,8 +9756,7 @@ var $vm = window.$vm = new __WEBPACK_IMPORTED_MODULE_1_vue___default.a({
                         break;
                     case "auto-send":
                         if (!bot.auto_send) {
-                            console.log('间隔', localStorage.auto_send_time_span, '秒');
-                            bot._startAutoSend(this.auto_send_time_span);
+                            bot._startAutoSend(localStorage.auto_send_time_span);
                             this.auto_send_text = '停止群发优惠券';
                         } else {
                             this.auto_send_text = '开始群发优惠券';
@@ -9787,6 +9783,11 @@ var $vm = window.$vm = new __WEBPACK_IMPORTED_MODULE_1_vue___default.a({
             bot.on('alimama-login', avatar => {
                 this.auto_send_text = '开始群发优惠券';
                 bot._stopAutoSend();
+                if (confirm('请先登录阿里妈妈，然后再开始群发！')) {
+                    chrome.tabs.create({
+                        url: 'https://www.alimama.com/member/login.htm'
+                    });
+                }
             });
             bot.on('user-avatar', avatar => {
                 $('.login_box .avatar img').attr('src', avatar);

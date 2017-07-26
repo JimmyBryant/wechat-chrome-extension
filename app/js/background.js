@@ -13827,7 +13827,6 @@ class WxBot extends __WEBPACK_IMPORTED_MODULE_1_wechat4u___default.a {
     this.groups = [];
     this.ava_contacts = [];
     this.quan_count = 0; //采集优惠券的数量
-
     this.initDB(); //初始化数据库
     this.on('login', () => {
       this.on('message', msg => {
@@ -14024,25 +14023,21 @@ class WxBot extends __WEBPACK_IMPORTED_MODULE_1_wechat4u___default.a {
     @method 开启自动群发优惠券
   */
   _startAutoSend(time_span = 20) {
-    console.debug('发送时间间隔', time_span);
+
     var _this = this;
     _this.auto_send = true;
-    let t = setInterval(send, 1000 * time_span);
 
     function send() {
       if (!_this.auto_send) {
-        clearInterval(t);
         return false;
       }
-      let low = +(localStorage.sended_quan_count || 0) + 1,
+      let low = parseInt(localStorage.sended_quan_count) + 1,
           up = low + 1;
-      console.debug('发送第', low, '条优惠券');
-      idb.getRangeCursor(CONF.STORE_NAME.TOTAL, low, up).then(cursor => {
+      return idb.getRangeCursor(CONF.STORE_NAME.TOTAL, low, up).then(cursor => {
         if (cursor) {
           let data = cursor.value;
           alimama.getToken(data.GoodsID).then(res => {
             let d = res.data;
-            console.log('获取淘口令', d);
             if (d.couponLinkTaoToken) {
               data.CouponLinkTaoToken = d.couponLinkTaoToken;
               data.CouponShortLinkUrl = d.couponShortLinkUrl;
@@ -14054,28 +14049,27 @@ class WxBot extends __WEBPACK_IMPORTED_MODULE_1_wechat4u___default.a {
               throw err;
             }
           }, reason => {
-            if (confirm('请登录阿里妈妈后重新开始群发！')) {
-              _this.emit('alimama-login');
-              chrome.tabs.create({
-                url: 'https://www.alimama.com/member/login.htm'
-              });
-            }
+            _this.emit('alimama-login');
             throw reason;
           }).then(data => {
             return _this._sendQuanMsg(data).then(() => {
-              console.log('发送第', up, '条优惠券', new Date());
+              console.debug('成功发送第', low, '个商品', new Date());
               localStorage.sended_quan_count = low; // 设置已经发送优惠券数量
-              return up;
+              setTimeout(function () {
+                send();
+              }, time_span * 1000); //定时发送下一条
             });
           }, reason => {
             console.error(reason);
             localStorage.sended_quan_count = low; // 设置已经发送优惠券数量
+            console.debug('第', low, '个商品没有优惠券', new Date());
             send(); // 发送下一条
           });
           cursor.continue();
         }
       });
     }
+    send();
   }
 
   /* 
@@ -14102,6 +14096,17 @@ class WxBot extends __WEBPACK_IMPORTED_MODULE_1_wechat4u___default.a {
 }
 
 let bot = null;
+// 默认配置
+if (!localStorage.max_quan_page) {
+  localStorage.max_quan_page = 2; // 默认采集2页数据
+}
+if (!localStorage.auto_send_time_span) {
+  localStorage.auto_send_time_span = 30; //默认间隔30秒群发
+}
+if (!localStorage.sended_quan_count) {
+  // 已经发送条数默认为0
+  localStorage.sended_quan_count = 0;
+}
 
 window.getBot = () => {
   let prop = null;
@@ -40314,7 +40319,7 @@ let alimama = {
                 localStorage.alimama_session_activetime = Date.now();
                 console.debug('更新alimama session', res.data);
                 // 20分钟更新一次session
-                setTimeout(refresh, 20 * 60 * 1000);
+                setTimeout(refresh, 10 * 60 * 1000);
             });
         }
     },

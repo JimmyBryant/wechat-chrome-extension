@@ -26,7 +26,7 @@ let alimama = {
                 localStorage.alimama_session_activetime = Date.now();
                 console.debug('更新alimama session',res.data);
                 // 20分钟更新一次session
-                setTimeout(refresh,20*60*1000);
+                setTimeout(refresh,10*60*1000);
             })
         }
 
