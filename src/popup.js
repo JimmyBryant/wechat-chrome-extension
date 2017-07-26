@@ -8,17 +8,26 @@ var $vm = window.$vm = new Vue({
     el: '#app',
     data: {
         page: '',
+        auto_send_text:'开始群发优惠券',
+        capture_quan_text:'开始采集优惠券',
         contacts: [],
         groups: [],
         quan_count: 0,
-        auto_captrue_state:false,
-        auto_send_state:false,
         filterName: '',
         sended_quan_count:localStorage.sended_quan_count||0,
         max_quan_page:localStorage.max_quan_page||2,    //默认采集前6页数据
         auto_send_time_span:localStorage.auto_send_time_span||30 //自动发送优惠券间隔,单位秒
     },
     methods: {
+        initData(){
+            if(bot.auto_captrue_quan){
+                this.capture_quan_text = '暂停采集优惠券';
+            }
+            if(bot.auto_send){
+                this.auto_send_text = '暂停群发优惠券'
+            }
+            this.quan_count = bot.quan_count;   // 更新优惠券数量
+        },
         keyupHandler(e){
             let elem = e.target;
             if(elem.id){
@@ -42,30 +51,27 @@ var $vm = window.$vm = new Vue({
                 switch (elem.id) {
                     case "capture-quan":
                         if (!bot.auto_captrue_quan) {
-                            console.log('开始采集优惠券')
                             bot._startCaptureQuan(localStorage.max_quan_page)
                             .then(p=>{
-                            elem.innerText = '开始采集优惠券';
-                            var notification = new Notification('优惠券抓取成功', {
-                                body: "已经成功抓取了前"+p+"页的优惠券数据"
-                            });
-
+                                this.capture_quan_text = '开始采集优惠券';
+                                var notification = new Notification('优惠券抓取成功', {
+                                    body: "已经成功抓取了前"+p+"页的优惠券数据"
+                                });
                             }).catch(err=>{
                                 console.error(err);
                             });
-                            elem.innerText = '停止采集优惠券';
+                            this.capture_quan_text = '停止采集优惠券';
                         } else {
                             bot.auto_captrue_quan = false;
-                            elem.innerText = '开始采集优惠券';
+                            this.capture_quan_text = '开始采集优惠券';
                         }
                     break;
                     case "auto-send":
                         if (!bot.auto_send) {
-                            console.log('开始群发优惠券')
                             bot._startAutoSend(localStorage.auto_send_time_span);
-                            elem.innerText = '停止群发优惠券';
+                            this.auto_send_text = '停止群发优惠券';
                         } else {
-                            elem.innerText = '开始群发优惠券';
+                            this.auto_send_text = '开始群发优惠券';
                             bot._stopAutoSend();
                             
                         }
@@ -87,6 +93,10 @@ var $vm = window.$vm = new Vue({
         login() {
             // 使用新的bot实例，避免旧bot实例绑定过多事件
             bot = bg_window.newBot();
+            bot.on('alimama-login', avatar => {
+                this.auto_send_text = '开始群发优惠券';
+                bot._stopAutoSend();
+            });
             bot.on('user-avatar', avatar => {
                 $('.login_box .avatar img').attr('src', avatar)
                 this.page = 'confirm';
@@ -130,12 +140,10 @@ var $vm = window.$vm = new Vue({
     created() {
         bg_window = chrome.extension.getBackgroundPage();
         bot = bg_window.getBot();
-
+        
         if (bot.state == bg_window.getWxState().login) {
             this.showContacts();
-            this.quan_count = bot.quan_count;
-            this.auto_send_state = bot.auto_send;
-            this.auto_captrue_state = bot.auto_captrue_quan;
+            this.initData();
         } else {
             this.page = 'scan';
             this.login();

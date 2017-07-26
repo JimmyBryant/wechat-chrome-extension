@@ -5,6 +5,7 @@ let axios = require('axios');
 
 let taoQuan = {
     requestTop100(){
+        console.debug('采集Top100商品')
         let params = {
         'r': 'Port/index',
         'type': 'top100',
@@ -23,7 +24,7 @@ let taoQuan = {
         });
     },
     requestTotal(){
-        console.debug('采集所有优惠券')
+        console.debug('采集所有商品')
         let quan_page = +(localStorage.quan_page||0);
         let page = quan_page+1;
         let params = {
@@ -45,6 +46,9 @@ let taoQuan = {
             throw err;
         });
     },
+    /* 采集跑量商品
+        @method
+    */
     requestPaoliang(){
 
     },

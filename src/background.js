@@ -240,7 +240,8 @@ class WxBot extends Wechat {
               throw err;
             }
           },reason=>{
-            if(confirm('需要登录阿里妈妈才能转换淘口令，是否现在登录?')){
+            if(confirm('请登录阿里妈妈后重新开始群发！')){
+              _this.emit('alimama-login');
               chrome.tabs.create({
                 url:'https://www.alimama.com/member/login.htm'
               })

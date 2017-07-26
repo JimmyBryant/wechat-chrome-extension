@@ -34,15 +34,13 @@
         <div v-if="groups.length">
         <dl class="control-box">
             <dd>            
-                <button class="btn" id="capture-quan"  v-on:click="clickHandler" v-if="auto_captrue_state">停止采集优惠券</button>
-                <button class="btn" id="capture-quan"  v-on:click="clickHandler" v-else>开始采集优惠券</button>
+                <button class="btn" id="capture-quan"  v-on:click="clickHandler">{{capture_quan_text}}</button>
                 <span>
                 采集最近<input class="custom-short-input" id="max-quan-page" v-on:keyup="keyupHandler" type="text" v-bind:value="max_quan_page"/>页数据
                 </span>
             </dd>
             <dd>
-                <button class="btn" id="auto-send"  v-on:click="clickHandler" v-if="auto_send_state">暂停群发优惠券</button>
-                <button class="btn" id="auto-send"  v-on:click="clickHandler" v-else>开始群发优惠券</button>
+                <button class="btn" id="auto-send"  v-on:click="clickHandler">{{auto_send_text}}</button>
                 <span>
                 发送间隔<input class="custom-short-input" id="auto-send-time-span" v-on:keyup="keyupHandler" type="text" v-bind:value="auto_send_time_span"/>秒
                 </span>

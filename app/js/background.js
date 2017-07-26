@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 325);
+/******/ 	return __webpack_require__(__webpack_require__.s = 326);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -1677,7 +1677,7 @@ exports.RETURN = RETURN;
 "use strict";
 
 
-var bind = __webpack_require__(319);
+var bind = __webpack_require__(320);
 
 /*global toString:true*/
 
@@ -4532,8 +4532,8 @@ module.exports = function(iter, ITERATOR){
 
 
 
-var base64 = __webpack_require__(328)
-var ieee754 = __webpack_require__(329)
+var base64 = __webpack_require__(329)
+var ieee754 = __webpack_require__(330)
 var isArray = __webpack_require__(314)
 
 exports.Buffer = Buffer
@@ -6368,8 +6368,8 @@ var util = __webpack_require__(309);
 util.inherits = __webpack_require__(90);
 /*</replacement>*/
 
-var Readable = __webpack_require__(332);
-var Writable = __webpack_require__(335);
+var Readable = __webpack_require__(333);
+var Writable = __webpack_require__(336);
 
 util.inherits(Duplex, Readable);
 
@@ -7004,7 +7004,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _request = __webpack_require__(345);
+var _request = __webpack_require__(346);
 
 Object.keys(_request).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
@@ -7016,7 +7016,7 @@ Object.keys(_request).forEach(function (key) {
   });
 });
 
-var _global = __webpack_require__(324);
+var _global = __webpack_require__(325);
 
 Object.keys(_global).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
@@ -12438,7 +12438,7 @@ SafeBuffer.allocUnsafeSlow = function (size) {
  * Expose `debug()` as the module.
  */
 
-exports = module.exports = __webpack_require__(339);
+exports = module.exports = __webpack_require__(340);
 exports.log = log;
 exports.formatArgs = formatArgs;
 exports.save = save;
@@ -12645,10 +12645,10 @@ function getDefaultAdapter() {
   var adapter;
   if (typeof XMLHttpRequest !== 'undefined') {
     // For browsers use XHR adapter
-    adapter = __webpack_require__(320);
+    adapter = __webpack_require__(321);
   } else if (typeof process !== 'undefined') {
     // For node use HTTP adapter
-    adapter = __webpack_require__(320);
+    adapter = __webpack_require__(321);
   }
   return adapter;
 }
@@ -13279,6 +13279,12 @@ function base64DetectIncompleteChar(buffer) {
 /* 319 */
 /***/ (function(module, exports, __webpack_require__) {
 
+module.exports = __webpack_require__(347);
+
+/***/ }),
+/* 320 */
+/***/ (function(module, exports, __webpack_require__) {
+
 "use strict";
 
 
@@ -13294,7 +13300,7 @@ module.exports = function bind(fn, thisArg) {
 
 
 /***/ }),
-/* 320 */
+/* 321 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13305,7 +13311,7 @@ var settle = __webpack_require__(350);
 var buildURL = __webpack_require__(352);
 var parseHeaders = __webpack_require__(353);
 var isURLSameOrigin = __webpack_require__(354);
-var createError = __webpack_require__(321);
+var createError = __webpack_require__(322);
 var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(355);
 
 module.exports = function xhrAdapter(config) {
@@ -13479,7 +13485,7 @@ module.exports = function xhrAdapter(config) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(42)))
 
 /***/ }),
-/* 321 */
+/* 322 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13503,7 +13509,7 @@ module.exports = function createError(message, config, code, response) {
 
 
 /***/ }),
-/* 322 */
+/* 323 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13515,7 +13521,7 @@ module.exports = function isCancel(value) {
 
 
 /***/ }),
-/* 323 */
+/* 324 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13541,7 +13547,7 @@ module.exports = Cancel;
 
 
 /***/ }),
-/* 324 */
+/* 325 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13653,22 +13659,22 @@ function getDeviceID() {
 //# sourceMappingURL=global.js.map
 
 /***/ }),
-/* 325 */
+/* 326 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* WEBPACK VAR INJECTION */(function(console) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_polyfill__ = __webpack_require__(126);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_polyfill___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_polyfill__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_wechat4u__ = __webpack_require__(326);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_wechat4u__ = __webpack_require__(327);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_wechat4u___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_wechat4u__);
 
 
 
 
-let alimama = __webpack_require__(375);
+let alimama = __webpack_require__(373);
 let idb = __webpack_require__(374);
-let CONF = __webpack_require__(373);
+let CONF = __webpack_require__(375);
 let taoQuan = __webpack_require__(376);
 
 class WxBot extends __WEBPACK_IMPORTED_MODULE_1_wechat4u___default.a {
@@ -13906,7 +13912,8 @@ class WxBot extends __WEBPACK_IMPORTED_MODULE_1_wechat4u___default.a {
               throw err;
             }
           }, reason => {
-            if (confirm('需要登录阿里妈妈才能转换淘口令，是否现在登录?')) {
+            if (confirm('请登录阿里妈妈后重新开始群发！')) {
+              _this.emit('alimama-login');
               chrome.tabs.create({
                 url: 'https://www.alimama.com/member/login.htm'
               });
@@ -13974,7 +13981,7 @@ window.getWxState = () => {
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(41)))
 
 /***/ }),
-/* 326 */
+/* 327 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13984,7 +13991,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _core = __webpack_require__(327);
+var _core = __webpack_require__(328);
 
 var _core2 = _interopRequireDefault(_core);
 
@@ -14080,7 +14087,6 @@ var Wechat = function (_WechatCore) {
       var _this3 = this;
 
       var id = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : ++this.syncPollingId;
-
       if (this.state !== this.CONF.STATE.login || this.syncPollingId !== id) {
         return;
       }
@@ -14091,6 +14097,8 @@ var Wechat = function (_WechatCore) {
             _this3.syncErrorCount = 0;
             _this3.handleSync(data);
           });
+        }else if(selector===undefined){
+          throw 'Sync Check发生错误'
         }
       }).then(function () {
         _this3.lastSyncTime = Date.now();
@@ -14141,6 +14149,8 @@ var Wechat = function (_WechatCore) {
             return _this4.batchGetContact(emptyGroup).then(function (_contacts) {
               return contacts = contacts.concat(_contacts || []);
             });
+          }else{
+            return emptyGroup;
           }
         } else {
           return contacts;
@@ -14441,11 +14451,11 @@ exports = module.exports = Wechat;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(42), __webpack_require__(41)))
 
 /***/ }),
-/* 327 */
+/* 328 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(Buffer, console) {
+/* WEBPACK VAR INJECTION */(function(console, Buffer) {
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -14457,7 +14467,7 @@ var _path = __webpack_require__(315);
 
 var _path2 = _interopRequireDefault(_path);
 
-var _bl = __webpack_require__(330);
+var _bl = __webpack_require__(331);
 
 var _bl2 = _interopRequireDefault(_bl);
 
@@ -14465,11 +14475,11 @@ var _debug2 = __webpack_require__(312);
 
 var _debug3 = _interopRequireDefault(_debug2);
 
-var _formData = __webpack_require__(341);
+var _formData = __webpack_require__(342);
 
 var _formData2 = _interopRequireDefault(_formData);
 
-var _mime = __webpack_require__(342);
+var _mime = __webpack_require__(343);
 
 var _mime2 = _interopRequireDefault(_mime);
 
@@ -14796,20 +14806,42 @@ var WechatCore = function () {
           'deviceid': (0, _util.getDeviceID)(),
           'synckey': _this9.PROP.formatedSyncKey
         };
-        return _this9.request({
+        let xhr = new XMLHttpRequest();
+        let arr = [],qstr='';
+        for(var key in params){
+          arr.push(key+'='+params[key]);
+        }
+        qstr = arr.join('&');
+        xhr.open('get',_this9.CONF.API_synccheck+'?'+qstr);
+        xhr.send();
+        return new Promise(function(resolve,reject){
+          xhr.addEventListener('load',function(){
+              var res = {
+                data:xhr.response
+              }
+              resolve(res);      
+          }
+        )})
+/*         return _this9.request({
           method: 'GET',
           url: _this9.CONF.API_synccheck,
           params: params
-        }).then(function (res) {
+        }) */
+        .then(function (res) {
           var window = {
             synccheck: {}
           };
-
           // eslint-disable-next-line
-          eval(res.data);
+          try{eval(res.data);}catch(err){
+            console.error('有错误：',res.data);
+            throw err
+          }
           _util.assert.equal(window.synccheck.retcode, _this9.CONF.SYNCCHECK_RET_SUCCESS, res);
-
           return window.synccheck.selector;
+        }).catch(function(err){
+          debug(err);
+          err.tips = '乱码了';
+          throw err;
         });
       }).catch(function (err) {
         debug(err);
@@ -15802,10 +15834,10 @@ var WechatCore = function () {
 
 exports.default = WechatCore;
 //# sourceMappingURL=core.js.map
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(119).Buffer, __webpack_require__(41)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(41), __webpack_require__(119).Buffer))
 
 /***/ }),
-/* 328 */
+/* 329 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -15926,7 +15958,7 @@ function fromByteArray (uint8) {
 
 
 /***/ }),
-/* 329 */
+/* 330 */
 /***/ (function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -16016,10 +16048,10 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 
 /***/ }),
-/* 330 */
+/* 331 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(Buffer) {var DuplexStream = __webpack_require__(331)
+/* WEBPACK VAR INJECTION */(function(Buffer) {var DuplexStream = __webpack_require__(332)
   , util         = __webpack_require__(89)
 
 
@@ -16303,14 +16335,14 @@ module.exports = BufferList
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(119).Buffer))
 
 /***/ }),
-/* 331 */
+/* 332 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(120);
 
 
 /***/ }),
-/* 332 */
+/* 333 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16385,7 +16417,7 @@ util.inherits = __webpack_require__(90);
 /*</replacement>*/
 
 /*<replacement>*/
-var debugUtil = __webpack_require__(333);
+var debugUtil = __webpack_require__(334);
 var debug = void 0;
 if (debugUtil && debugUtil.debuglog) {
   debug = debugUtil.debuglog('stream');
@@ -16394,7 +16426,7 @@ if (debugUtil && debugUtil.debuglog) {
 }
 /*</replacement>*/
 
-var BufferList = __webpack_require__(334);
+var BufferList = __webpack_require__(335);
 var destroyImpl = __webpack_require__(317);
 var StringDecoder;
 
@@ -17324,13 +17356,13 @@ function indexOf(xs, x) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(28), __webpack_require__(42)))
 
 /***/ }),
-/* 333 */
+/* 334 */
 /***/ (function(module, exports) {
 
 /* (ignored) */
 
 /***/ }),
-/* 334 */
+/* 335 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17410,7 +17442,7 @@ module.exports = function () {
 }();
 
 /***/ }),
-/* 335 */
+/* 336 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17486,7 +17518,7 @@ util.inherits = __webpack_require__(90);
 
 /*<replacement>*/
 var internalUtil = {
-  deprecate: __webpack_require__(338)
+  deprecate: __webpack_require__(339)
 };
 /*</replacement>*/
 
@@ -18078,10 +18110,10 @@ Writable.prototype._destroy = function (err, cb) {
   this.end();
   cb(err);
 };
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(42), __webpack_require__(336).setImmediate, __webpack_require__(28)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(42), __webpack_require__(337).setImmediate, __webpack_require__(28)))
 
 /***/ }),
-/* 336 */
+/* 337 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var apply = Function.prototype.apply;
@@ -18134,13 +18166,13 @@ exports._unrefActive = exports.active = function(item) {
 };
 
 // setimmediate attaches itself to the global object
-__webpack_require__(337);
+__webpack_require__(338);
 exports.setImmediate = setImmediate;
 exports.clearImmediate = clearImmediate;
 
 
 /***/ }),
-/* 337 */
+/* 338 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
@@ -18333,7 +18365,7 @@ exports.clearImmediate = clearImmediate;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(28), __webpack_require__(42)))
 
 /***/ }),
-/* 338 */
+/* 339 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(console, global) {
@@ -18407,7 +18439,7 @@ function config (name) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(41), __webpack_require__(28)))
 
 /***/ }),
-/* 339 */
+/* 340 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(console) {
@@ -18423,7 +18455,7 @@ exports.coerce = coerce;
 exports.disable = disable;
 exports.enable = enable;
 exports.enabled = enabled;
-exports.humanize = __webpack_require__(340);
+exports.humanize = __webpack_require__(341);
 
 /**
  * The currently active debug mode names, and names to skip.
@@ -18616,7 +18648,7 @@ function coerce(val) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(41)))
 
 /***/ }),
-/* 340 */
+/* 341 */
 /***/ (function(module, exports) {
 
 /**
@@ -18774,7 +18806,7 @@ function plural(ms, n, name) {
 
 
 /***/ }),
-/* 341 */
+/* 342 */
 /***/ (function(module, exports) {
 
 /* eslint-env browser */
@@ -18782,11 +18814,11 @@ module.exports = typeof self == 'object' ? self.FormData : window.FormData;
 
 
 /***/ }),
-/* 342 */
+/* 343 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(process, console) {var path = __webpack_require__(315);
-var fs = __webpack_require__(343);
+var fs = __webpack_require__(344);
 
 function Mime() {
   // Map of extension -> mime type
@@ -18871,7 +18903,7 @@ Mime.prototype.extension = function(mimeType) {
 var mime = new Mime();
 
 // Define built-in types
-mime.define(__webpack_require__(344));
+mime.define(__webpack_require__(345));
 
 // Default type
 mime.default_type = mime.lookup('bin');
@@ -18897,13 +18929,13 @@ module.exports = mime;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(42), __webpack_require__(41)))
 
 /***/ }),
-/* 343 */
+/* 344 */
 /***/ (function(module, exports) {
 
 
 
 /***/ }),
-/* 344 */
+/* 345 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -21622,7 +21654,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 345 */
+/* 346 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21633,11 +21665,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Request = Request;
 
-var _axios = __webpack_require__(346);
+var _axios = __webpack_require__(319);
 
 var _axios2 = _interopRequireDefault(_axios);
 
-var _global = __webpack_require__(324);
+var _global = __webpack_require__(325);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -21701,12 +21733,6 @@ function Request(defaults) {
 //# sourceMappingURL=request.js.map
 
 /***/ }),
-/* 346 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(347);
-
-/***/ }),
 /* 347 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -21714,7 +21740,7 @@ module.exports = __webpack_require__(347);
 
 
 var utils = __webpack_require__(48);
-var bind = __webpack_require__(319);
+var bind = __webpack_require__(320);
 var Axios = __webpack_require__(348);
 var defaults = __webpack_require__(313);
 
@@ -21749,9 +21775,9 @@ axios.create = function create(instanceConfig) {
 };
 
 // Expose Cancel & CancelToken
-axios.Cancel = __webpack_require__(323);
+axios.Cancel = __webpack_require__(324);
 axios.CancelToken = __webpack_require__(362);
-axios.isCancel = __webpack_require__(322);
+axios.isCancel = __webpack_require__(323);
 
 // Expose all/spread
 axios.all = function all(promises) {
@@ -21883,7 +21909,7 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
 "use strict";
 
 
-var createError = __webpack_require__(321);
+var createError = __webpack_require__(322);
 
 /**
  * Resolve or reject a Promise based on response status.
@@ -22299,7 +22325,7 @@ module.exports = InterceptorManager;
 
 var utils = __webpack_require__(48);
 var transformData = __webpack_require__(359);
-var isCancel = __webpack_require__(322);
+var isCancel = __webpack_require__(323);
 var defaults = __webpack_require__(313);
 
 /**
@@ -22450,7 +22476,7 @@ module.exports = function combineURLs(baseURL, relativeURL) {
 "use strict";
 
 
-var Cancel = __webpack_require__(323);
+var Cancel = __webpack_require__(324);
 
 /**
  * A `CancelToken` is an object that can be used to request cancellation of an operation.
@@ -40123,13 +40149,89 @@ function MessageFactory(instance) {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
+/* WEBPACK VAR INJECTION */(function(console) {
 
+let axios = __webpack_require__(319);
+let alimama = {
+    /* 
+        模拟阿里妈妈登录
+        @method
+    */
+    login() {
+        let params = 'http://login.taobao.com/member/taobaoke/login.htm?is_login=1',
+            data = { TPL_username: '%BA%CE%C0%FB%BE%FC99', TPL_password: '', ncoSig: '', ncoSessionid: '', ncoToken: 'a9b6780923bbe007aa517fb1d6f772841db25308', slideCodeShow: false, useMobile: false, lang: 'zh_CN', loginsite: 0, newlogin: 0, TPL_redirect_url: 'http://login.taobao.com/member/taobaoke/login.htm?is_login=1', from: 'alimama', fc: 'default', style: 'mini', css_style: '', keyLogin: false, qrLogin: true, newMini: false, newMini2: true, tid: '', loginType: 3, minititle: '', minipara: '', pstrong: '', sign: '', need_sign: '', isIgnore: '', full_redirect: true, sub_jump: '', popid: '', callback: '', guf: '', not_duplite_str: '', need_user_id: '', poy: '', gvfdcname: 10, gvfdcre: '68747470733A2F2F7777772E616C696D616D612E636F6D2F6D656D6265722F6C6F67696E2E68746D', from_encoding: '', sub: '', TPL_password_2: '	027d73c61629b5b20b763d6cda1c7fc90ee265619c86c4e369690431637f25f18513f7c9cf01c62727e03e2e8c1120e5130028e1d7b30ef24e38177039fde57c181402e3641332c8d4f006e26eb39af4dc492e0be6930b1181c45ae6475e6e1e5315c2e36a79be32b53e8a4406fc253bbb0dab812aa21ee0dba82db371d1c30d', loginASR: 1, loginASRSuc: 1, allp: '', oslanguage: 'zh-CN', sr: '1920*1080', osVer: '', naviVer: 'chrome|59.0307186', osACN: 'Mozilla', osAV: '5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.86 Safari/537.36', osPF: 'Win32', miserHardInfo: '', appkey: '', nickLoginLink: '', mobileLoginLink: 'https://login.taobao.com/member/login.jhtml?style=mini&newMini2=true&from=alimama&redirectURL=http://login.taobao.com/member/taobaoke/login.htm?is_login=1&full_redirect=true&disableQuickLogin=true&useMobile=true', showAssistantLink: '', um_token: 'HV01PAAZ0b85ebd67ac32dbb5977512200b55297', ua: '095#6ULotwoYo8IocERZoooooPL7/82LUPL9T12owPClUOcVzPHh/FNQ8j6xR8uEJjAyoiuiGfCU1bc5JPHdT+uFHfCdoBuEwCiRoRIj+SDkzqHF8qx5aMFlEKE58SWG6hiRoRIjZSDkzsHV6dfzbdOEy8qkNPAQDbeRoRQjZeALd+a+ZUySjeItqqx5T2aGTo0R8SXS/6eRooIdck7xnwLoAog+c9Kw80F36K5v6M0jz8YhTfy7vILojEt+FeIl1m1+jvPjboGW6Kh98eI966QhTKlmxwLoPw6+3OIE1byJBMbQondvsY/RoRHjZhULLJOYgdQVtwETE2xUNPtfupKqWUHRoob+ZStR2ILoR3iPcebp1gLRoo5+qssLf/fH/uBhOXb3wgiRobR+HpD/NhL5c4EHjj/+X8uScytP6pdm84Yf/AEVZ6xUsp0Ubf/+X8uScytD20GYctlhNOhQc/x7/SKSLMQkEqfSc8TAGMGvzgLMTFO8r/xJcgN7axFdeSxUTgcACp0RqMEW3aiw6hfbj6XYDXAywRExFbE0Dyfts8uScyFwTVQw84Yfa0/BeRxtj06KCplm/pxbjo6kAYjJsn0Jf0ikeRxtj06guSMHcyYSNaVyYH0YC8NhK0EiF8TkFbE0DSZLLnu5ca/gCtoU/SxUaPRzEpx5/b6p2M0OTPfUVeCsT6hWs8uSfmF3y4XUTSWPc0PrWVKlzFRqTVXSsKB7aXQwX8ffsgAK6nKvWnfk/WhqZte5sIHRooxPEdGcgMljPdORooY0oA6rLdQ2oIoQZ9i9bAr7Z91+ZSYKO+m+091+TTbp1ILgZ9iwUAr7oID+ZSPLO+ORRlFRooMN/EqD3ILoRPC9gfCroIoLTntsYQ/RooW++SsAI+OYhMx2oIoro31cb0+7jNh+6jE0rCG7xwLoAwt+xeIK1byJ9xW30odoz2LhcWYVcqqm3ILoRPC9gfumoIotR3i9bjLpI0F36fEeTQKhz8YhOUsxyKBhz6eRooIdck7x' };
+    },
+    getAdZone() {
+        let url = 'http://pub.alimama.com/common/adzone/newSelfAdzone2.json?tag=29&itemId=552220693426&blockId=&t=1500866067226&_tb_token_=qZfgrBNDmpq&pvid=10_222.188.153.160_576_1500862980397';
+        let params = {};
+    },
+    /* 
+        维持阿里妈妈session登录状态
+    */
+    refreshSesson() {
+        function refresh() {
+            axios.get('https://anyservice.taobao.com/window/getAnywhereContent.do?anyconditions=%7B%22isInit%22%3Atrue%7D&from=anywhere&sourceId=434&sourceUrl=https%3A%2F%2Fwww.alimama.com%2Findex.htm&bizCode=PCMaMaAnyWhereWindow&callback=anywhere_jsonp_getAnywhereContent&_input_charset=UTF-8').then(res => {
+                return axios.get('https://anyhelp.taobao.com/window/getUserStateInfo.do?target=1&from=anywhere&sourceId=434&sourceUrl=https%3A%2F%2Fwww.alimama.com%2Findex.htm&requestId=&bizCode=PCMaMaAnyWhereWindow&callback=anywhere_jsonp_2&_input_charset=UTF-8');
+            }).then(res => {
+                localStorage.alimama_session_activetime = Date.now();
+                console.debug('更新alimama session', res.data);
+                // 20分钟更新一次session
+                setTimeout(refresh, 20 * 60 * 1000);
+            });
+        }
+    },
+    /* 
+        @param {Integer} id  商品id
+        @return {Promise}
+    */
+    getToken(id) {
+        // 先获取cookie
+        return new Promise((resolve, reject) => {
+            chrome.cookies.get({
+                url: 'http://pub.alimama.com',
+                name: '_tb_token_'
+            }, function (cookie) {
+                resolve(cookie);
+            });
+        }).then(cookie => {
+            if (!cookie) {
+                let err = { tip: '还未登录阿里妈妈' };
+                throw err;
+            }
+            let url = 'http://pub.alimama.com/common/code/getAuctionCode.json';
+            let params = {
+                auctionid: id,
+                adzoneid: '110582761',
+                siteid: '29668844',
+                scenes: 1,
+                t: Date.now(),
+                _tb_token_: cookie.value
 
-exports = module.exports = {
-    STORE_NAME: {
-        TOTAL: 'quan_total'
+            };
+            return axios.request({
+                url: url,
+                method: 'get',
+                params: params
+            }).then(res => {
+                // 如果返回的是字符串，表示登录失效
+                if (res.data.length > 0) {
+                    let err = { tip: '还未登录阿里妈妈' };
+                    throw err;
+                }
+                // 定时更新session
+                if (!localStorage.alimama_session_activetime) {
+                    alimama.refreshSesson();
+                }
+                return res.data;
+            }).catch(err => {
+                throw err;
+            });
+        });
     }
 };
+
+exports = module.exports = alimama;
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(41)))
 
 /***/ }),
 /* 374 */
@@ -40138,7 +40240,7 @@ exports = module.exports = {
 "use strict";
 /* WEBPACK VAR INJECTION */(function(console) {
 
-let CONF = __webpack_require__(373);
+let CONF = __webpack_require__(375);
 var indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
 const STORE_NAME = CONF.STORE_NAME;
 let db = null;
@@ -40266,125 +40368,11 @@ exports = module.exports = idb;
 "use strict";
 
 
-let axios = __webpack_require__(346);
-let alimama = {
-    /* 
-        模拟阿里妈妈登录
-        @method
-    */
-    login() {
-        let params = 'http://login.taobao.com/member/taobaoke/login.htm?is_login=1',
-            data = {
-            TPL_username: '%BA%CE%C0%FB%BE%FC99',
-            TPL_password: '',
-            ncoSig: '',
-            ncoSessionid: '',
-            ncoToken: 'a9b6780923bbe007aa517fb1d6f772841db25308',
-            slideCodeShow: false,
-            useMobile: false,
-            lang: 'zh_CN',
-            loginsite: 0,
-            newlogin: 0,
-            TPL_redirect_url: 'http://login.taobao.com/member/taobaoke/login.htm?is_login=1',
-            from: 'alimama',
-            fc: 'default',
-            style: 'mini',
-            css_style: '',
-            keyLogin: false,
-            qrLogin: true,
-            newMini: false,
-            newMini2: true,
-            tid: '',
-            loginType: 3,
-            minititle: '',
-            minipara: '',
-            pstrong: '',
-            sign: '',
-            need_sign: '',
-            isIgnore: '',
-            full_redirect: true,
-            sub_jump: '',
-            popid: '',
-            callback: '',
-            guf: '',
-            not_duplite_str: '',
-            need_user_id: '',
-            poy: '',
-            gvfdcname: 10,
-            gvfdcre: '68747470733A2F2F7777772E616C696D616D612E636F6D2F6D656D6265722F6C6F67696E2E68746D',
-            from_encoding: '',
-            sub: '',
-            TPL_password_2: '	027d73c61629b5b20b763d6cda1c7fc90ee265619c86c4e369690431637f25f18513f7c9cf01c62727e03e2e8c1120e5130028e1d7b30ef24e38177039fde57c181402e3641332c8d4f006e26eb39af4dc492e0be6930b1181c45ae6475e6e1e5315c2e36a79be32b53e8a4406fc253bbb0dab812aa21ee0dba82db371d1c30d',
-            loginASR: 1,
-            loginASRSuc: 1,
-            allp: '',
-            oslanguage: 'zh-CN',
-            sr: '1920*1080',
-            osVer: '',
-            naviVer: 'chrome|59.0307186',
-            osACN: 'Mozilla',
-            osAV: '5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.86 Safari/537.36',
-            osPF: 'Win32',
-            miserHardInfo: '',
-            appkey: '',
-            nickLoginLink: '',
-            mobileLoginLink: 'https://login.taobao.com/member/login.jhtml?style=mini&newMini2=true&from=alimama&redirectURL=http://login.taobao.com/member/taobaoke/login.htm?is_login=1&full_redirect=true&disableQuickLogin=true&useMobile=true',
-            showAssistantLink: '',
-            um_token: 'HV01PAAZ0b85ebd67ac32dbb5977512200b55297',
-            ua: '095#6ULotwoYo8IocERZoooooPL7/82LUPL9T12owPClUOcVzPHh/FNQ8j6xR8uEJjAyoiuiGfCU1bc5JPHdT+uFHfCdoBuEwCiRoRIj+SDkzqHF8qx5aMFlEKE58SWG6hiRoRIjZSDkzsHV6dfzbdOEy8qkNPAQDbeRoRQjZeALd+a+ZUySjeItqqx5T2aGTo0R8SXS/6eRooIdck7xnwLoAog+c9Kw80F36K5v6M0jz8YhTfy7vILojEt+FeIl1m1+jvPjboGW6Kh98eI966QhTKlmxwLoPw6+3OIE1byJBMbQondvsY/RoRHjZhULLJOYgdQVtwETE2xUNPtfupKqWUHRoob+ZStR2ILoR3iPcebp1gLRoo5+qssLf/fH/uBhOXb3wgiRobR+HpD/NhL5c4EHjj/+X8uScytP6pdm84Yf/AEVZ6xUsp0Ubf/+X8uScytD20GYctlhNOhQc/x7/SKSLMQkEqfSc8TAGMGvzgLMTFO8r/xJcgN7axFdeSxUTgcACp0RqMEW3aiw6hfbj6XYDXAywRExFbE0Dyfts8uScyFwTVQw84Yfa0/BeRxtj06KCplm/pxbjo6kAYjJsn0Jf0ikeRxtj06guSMHcyYSNaVyYH0YC8NhK0EiF8TkFbE0DSZLLnu5ca/gCtoU/SxUaPRzEpx5/b6p2M0OTPfUVeCsT6hWs8uSfmF3y4XUTSWPc0PrWVKlzFRqTVXSsKB7aXQwX8ffsgAK6nKvWnfk/WhqZte5sIHRooxPEdGcgMljPdORooY0oA6rLdQ2oIoQZ9i9bAr7Z91+ZSYKO+m+091+TTbp1ILgZ9iwUAr7oID+ZSPLO+ORRlFRooMN/EqD3ILoRPC9gfCroIoLTntsYQ/RooW++SsAI+OYhMx2oIoro31cb0+7jNh+6jE0rCG7xwLoAwt+xeIK1byJ9xW30odoz2LhcWYVcqqm3ILoRPC9gfumoIotR3i9bjLpI0F36fEeTQKhz8YhOUsxyKBhz6eRooIdck7x'
-        };
-    },
-    getAdZone() {
-        let url = 'http://pub.alimama.com/common/adzone/newSelfAdzone2.json?tag=29&itemId=552220693426&blockId=&t=1500866067226&_tb_token_=qZfgrBNDmpq&pvid=10_222.188.153.160_576_1500862980397';
-        let params = {};
-    },
-    /* 
-        @param {Integer} id  商品id
-        @return {Promise}
-    */
-    getToken(id) {
-        // 先获取cookie
-        return new Promise((resolve, reject) => {
-            chrome.cookies.get({
-                url: 'http://pub.alimama.com',
-                name: '_tb_token_'
-            }, function (cookie) {
-                resolve(cookie);
-            });
-        }).then(cookie => {
-            if (!cookie) {
-                let err = { tip: '还未登录阿里妈妈' };
-                throw err;
-            }
-            let url = 'http://pub.alimama.com/common/code/getAuctionCode.json';
-            let params = {
-                auctionid: id,
-                adzoneid: '110582761',
-                siteid: '29668844',
-                scenes: 1,
-                t: Date.now(),
-                _tb_token_: cookie.value
-
-            };
-            return axios.request({
-                url: url,
-                method: 'get',
-                params: params
-            }).then(res => {
-                // 如果返回的是字符串，表示登录失效
-                if (res.data.length > 0) {
-                    let err = { tip: '还未登录阿里妈妈' };
-                    throw err;
-                }
-                return res.data;
-            }).catch(err => {
-                throw err;
-            });
-        });
+exports = module.exports = {
+    STORE_NAME: {
+        TOTAL: 'quan_total'
     }
 };
-
-exports = module.exports = alimama;
 
 /***/ }),
 /* 376 */
@@ -40393,12 +40381,13 @@ exports = module.exports = alimama;
 "use strict";
 /* WEBPACK VAR INJECTION */(function(console) {
 
-let CONF = __webpack_require__(373);
+let CONF = __webpack_require__(375);
 let idb = __webpack_require__(374);
-let axios = __webpack_require__(346);
+let axios = __webpack_require__(319);
 
 let taoQuan = {
     requestTop100() {
+        console.debug('采集Top100商品');
         let params = {
             'r': 'Port/index',
             'type': 'top100',
@@ -40417,7 +40406,7 @@ let taoQuan = {
         });
     },
     requestTotal() {
-        console.debug('采集所有优惠券');
+        console.debug('采集所有商品');
         let quan_page = +(localStorage.quan_page || 0);
         let page = quan_page + 1;
         let params = {
@@ -40439,6 +40428,9 @@ let taoQuan = {
             throw err;
         });
     },
+    /* 采集跑量商品
+        @method
+    */
     requestPaoliang() {},
     /* 
     * @method
