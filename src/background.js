@@ -195,7 +195,7 @@ class WxBot extends Wechat {
           // 判断是否勾选群发
           if(contact.Checked){
             this.sendMsg(obj, contact.UserName).then(()=>{
-              let msg_text = `${data.D_title} 【包邮秒杀】\n【在售价】${data.Org_Price}元\n【券后价】${data.Price}元\n【下单链接】${data.CouponShortLinkUrl}\n-----------\n复制这条信息${data.CouponLinkTaoToken}，打开☞手机淘宝☜即可购买！`;
+              let msg_text = `${data.D_title} 【包邮秒杀】\n【在售价】${parseFloat(data.Org_Price).toFixed(2)}元\n【券后价】${parseFloat(data.Price).toFixed(2)}元\n【下单链接】${data.CouponShortLinkUrl}\n-----------\n复制这条信息${data.CouponLinkTaoToken}，打开☞手机淘宝☜即可购买！`;
               return this.sendMsg(msg_text,contact.UserName);
             }).catch(err => {
               this.emit('error', err)
