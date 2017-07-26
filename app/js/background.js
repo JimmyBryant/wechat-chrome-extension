@@ -13957,7 +13957,9 @@ class WxBot extends __WEBPACK_IMPORTED_MODULE_1_wechat4u___default.a {
         if (localStorage.quan_page == 0) {
           p = taoQuan.requestTop100().then(data => {
             // 先采集top100商品
-            taoQuan.storeQuan(CONF.STORE_NAME.TOTAL, data);
+            taoQuan.storeQuan(CONF.STORE_NAME.TOTAL, data).then(count => {
+              _this.quan_count = count;
+            });
           }, reason => {
             throw reason;
           });
@@ -13968,7 +13970,9 @@ class WxBot extends __WEBPACK_IMPORTED_MODULE_1_wechat4u___default.a {
         }, reason => {
           throw reason;
         }).then(data => {
-          taoQuan.storeQuan(CONF.STORE_NAME.TOTAL, data);
+          taoQuan.storeQuan(CONF.STORE_NAME.TOTAL, data).then(count => {
+            _this.quan_count = count;
+          });
         }, reason => {
           throw reason;
         }).then(() => {

@@ -145,7 +145,9 @@ class WxBot extends Wechat {
         // 表示还没开始采集
         if(localStorage.quan_page==0){
           p = taoQuan.requestTop100().then(data=>{  // 先采集top100商品
-            taoQuan.storeQuan(CONF.STORE_NAME.TOTAL,data)
+            taoQuan.storeQuan(CONF.STORE_NAME.TOTAL,data).then(count=>{
+              _this.quan_count = count;
+            })
           },reason=>{
             throw reason;
           });
@@ -156,7 +158,9 @@ class WxBot extends Wechat {
         },reason=>{
           throw reason
         }).then(data=>{
-          taoQuan.storeQuan(CONF.STORE_NAME.TOTAL,data)
+          taoQuan.storeQuan(CONF.STORE_NAME.TOTAL,data).then(count=>{
+            _this.quan_count = count;
+          })
         },reason=>{
           throw reason;
         }).then(()=>{
