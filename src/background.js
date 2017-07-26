@@ -185,6 +185,10 @@ class WxBot extends Wechat {
   */
   _sendQuanMsg(data){
     let pic = data.Pic;
+    // 确保图片地址带http协议
+    if(/^\/\//.test(pic)){
+      pic = 'http:'+pic;
+    }
     let filename = pic.substring(pic.lastIndexOf('/')+1);
     let _ = this;
     // 只发有优惠券商品
@@ -247,6 +251,8 @@ class WxBot extends Wechat {
               console.debug('成功发送第',low,'个商品',new Date());
               localStorage.sended_quan_count = low;  // 设置已经发送优惠券数量
               setTimeout(function(){send()},time_span*1000);  //定时发送下一条
+            },reason=>{
+              console.error(reason);
             });
           },reason=>{
             console.error(reason);
